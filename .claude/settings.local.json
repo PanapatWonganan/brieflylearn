@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(rm:*)",
+      "Bash(grep:*)",
+      "Bash(mkdir:*)",
+      "Bash(composer create-project:*)",
+      "Bash(composer:*)",
+      "Bash(php artisan make:filament-user:*)",
+      "Bash(php artisan:*)",
+      "Bash(curl:*)",
+      "Bash(mv:*)",
+      "Bash(touch:*)",
+      "Bash(npm install:*)",
+      "Bash(mysql:*)",
+      "Bash(echo:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm run dev:*)",
+      "Bash(php:*)",
+      "Bash(sqlite3:*)",
+      "Bash(sed:*)",
+      "WebFetch(domain:thanasinlms.vercel.app)",
+      "Bash(find:*)",
+      "Bash(for file in src/app/landing/page.tsx src/app/privacy/page.tsx src/app/garden/achievements/page.tsx src/app/garden/friends/page.tsx src/app/garden/advanced-plants/page.tsx src/app/garden/seasonal/page.tsx src/app/faq/page.tsx src/app/terms/page.tsx src/app/blog/page.tsx src/app/trainers/page.tsx src/app/lessons/[id]/page.tsx src/app/pricing/page.tsx src/app/help/page.tsx)",
+      "Bash(do)",
+      "Bash(if [ -f \"$file\" ])",
+      "Bash(then)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Read(//Users/panapat/**)",
+      "Bash(python3:*)"
+    ],
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  }
+}

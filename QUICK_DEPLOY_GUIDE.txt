@@ -1,0 +1,271 @@
+================================================================================
+🚀 BrieflyLearn Quick Deploy Guide - Copy & Paste Commands
+================================================================================
+
+Server: 207.148.76.203
+Username: root
+Password: 2(hVW],PciL[,Z2?
+
+GitHub Backend: https://github.com/PanapatWonganan/brieflylearn-backend
+GitHub Frontend: https://github.com/PanapatWonganan/brieflylearn-frontend
+
+================================================================================
+STEP 1: Connect to Server
+================================================================================
+
+ssh root@207.148.76.203
+# Enter password when prompted: 2(hVW],PciL[,Z2?
+
+
+================================================================================
+STEP 2: Update System & Install Software (5-10 minutes)
+================================================================================
+
+apt update && apt upgrade -y && apt install -y curl wget git unzip software-properties-common ufw vim nginx mysql-server
+
+
+================================================================================
+STEP 3: Setup Firewall
+================================================================================
+
+ufw --force enable && ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp
+
+
+================================================================================
+STEP 4: Install PHP 8.2
+================================================================================
+
+add-apt-repository -y ppa:ondrej/php && apt update && apt install -y php8.2-fpm php8.2-cli php8.2-common php8.2-mysql php8.2-zip php8.2-gd php8.2-mbstring php8.2-curl php8.2-xml php8.2-bcmath php8.2-intl php8.2-readline
+
+
+================================================================================
+STEP 5: Install Composer
+================================================================================
+
+curl -sS https://getcomposer.org/installer -o composer-setup.php && php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm composer-setup.php
+
+
+================================================================================
+STEP 6: Install Node.js & PM2
+================================================================================
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt install -y nodejs && npm install -g pm2
+
+
+================================================================================
+STEP 7: Create Database
+================================================================================
+
+mysql -e "CREATE DATABASE IF NOT EXISTS fitness_lms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" && mysql -e "CREATE USER IF NOT EXISTS 'brieflylearn'@'localhost' IDENTIFIED BY 'BrieflyDB2025!Strong';" && mysql -e "GRANT ALL PRIVILEGES ON fitness_lms.* TO 'brieflylearn'@'localhost';" && mysql -e "FLUSH PRIVILEGES;"
+
+
+================================================================================
+STEP 8: Generate SSH Key for GitHub
+================================================================================
+
+ssh-keygen -t ed25519 -C "deploy@brieflylearn.com" -f ~/.ssh/id_ed25519 -N "" && cat ~/.ssh/id_ed25519.pub
+
+⚠️  STOP HERE!
+Copy the SSH key shown above (starts with ssh-ed25519...)
+
+Add it to BOTH GitHub repositories:
+1. https://github.com/PanapatWonganan/brieflylearn-backend/settings/keys
+2. https://github.com/PanapatWonganan/brieflylearn-frontend/settings/keys
+
+Click "Add deploy key", paste the key, check "Allow write access"
+
+Press Enter when done...
+
+
+================================================================================
+STEP 9: Clone Backend & Setup
+================================================================================
+
+mkdir -p /var/www/brieflylearn && cd /var/www/brieflylearn && ssh-keyscan github.com >> ~/.ssh/known_hosts && git clone git@github.com:PanapatWonganan/brieflylearn-backend.git backend && cd backend && composer install --optimize-autoloader --no-dev
+
+
+================================================================================
+STEP 10: Configure Backend
+================================================================================
+
+cat > /var/www/brieflylearn/backend/.env << 'ENVEOF'
+APP_NAME="BrieflyLearn"
+APP_ENV=production
+APP_KEY=
+APP_DEBUG=false
+APP_URL=http://207.148.76.203
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=fitness_lms
+DB_USERNAME=brieflylearn
+DB_PASSWORD=BrieflyDB2025!Strong
+
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+ENVEOF
+
+php artisan key:generate && chown -R www-data:www-data /var/www/brieflylearn/backend && chmod -R 755 /var/www/brieflylearn/backend && chmod -R 775 storage bootstrap/cache
+
+
+================================================================================
+STEP 11: Run Migrations & Seed Data
+================================================================================
+
+cd /var/www/brieflylearn/backend && php artisan migrate --force && php artisan db:seed --force && php artisan config:cache && php artisan route:cache && php artisan view:cache
+
+
+================================================================================
+STEP 12: Clone Frontend & Setup
+================================================================================
+
+cd /var/www/brieflylearn && git clone git@github.com:PanapatWonganan/brieflylearn-frontend.git frontend && cd frontend && npm ci --production=false
+
+
+================================================================================
+STEP 13: Configure Frontend
+================================================================================
+
+cat > /var/www/brieflylearn/frontend/.env.production << 'FRONTENV'
+NEXT_PUBLIC_API_URL=http://207.148.76.203/api/v1
+NEXT_PUBLIC_APP_NAME=BrieflyLearn
+NEXT_PUBLIC_APP_URL=http://207.148.76.203
+NODE_ENV=production
+FRONTENV
+
+
+================================================================================
+STEP 14: Build Frontend (This takes 5-10 minutes!)
+================================================================================
+
+cd /var/www/brieflylearn/frontend && npm run build
+
+
+================================================================================
+STEP 15: Setup PM2
+================================================================================
+
+cat > /var/www/brieflylearn/frontend/ecosystem.config.js << 'PM2EOF'
+module.exports = {
+  apps: [{
+    name: 'brieflylearn-frontend',
+    script: 'npm',
+    args: 'start',
+    cwd: '/var/www/brieflylearn/frontend',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3000
+    }
+  }]
+}
+PM2EOF
+
+pm2 start ecosystem.config.js && pm2 save && pm2 startup systemd -u root --hp /root
+
+⚠️  Copy and run the command shown above, then continue...
+
+
+================================================================================
+STEP 16: Configure Nginx
+================================================================================
+
+cat > /etc/nginx/sites-available/brieflylearn << 'NGINXEOF'
+server {
+    listen 80 default_server;
+    server_name 207.148.76.203;
+    root /var/www/brieflylearn/backend/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+    charset utf-8;
+
+    location /api {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location /admin {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_hide_header X-Powered-By;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+NGINXEOF
+
+ln -sf /etc/nginx/sites-available/brieflylearn /etc/nginx/sites-enabled/ && rm -f /etc/nginx/sites-enabled/default && nginx -t && systemctl reload nginx
+
+
+================================================================================
+STEP 17: Verify Everything
+================================================================================
+
+echo "=== Services Status ===" && systemctl status nginx | grep Active && systemctl status php8.2-fpm | grep Active && systemctl status mysql | grep Active && pm2 status
+
+
+================================================================================
+🎉 DEPLOYMENT COMPLETE!
+================================================================================
+
+✅ Frontend: http://207.148.76.203
+✅ Backend API: http://207.148.76.203/api/v1/courses
+✅ Admin Panel: http://207.148.76.203/admin
+
+🔑 Admin Login:
+   Email: admin@brieflylearn.com
+   Password: admin123
+
+⚠️  Change admin password immediately after first login!
+
+
+================================================================================
+Useful Commands
+================================================================================
+
+# Check PM2 logs
+pm2 logs brieflylearn-frontend
+
+# Check Laravel logs
+tail -f /var/www/brieflylearn/backend/storage/logs/laravel.log
+
+# Restart frontend
+pm2 restart brieflylearn-frontend
+
+# Restart Nginx
+systemctl restart nginx
+
