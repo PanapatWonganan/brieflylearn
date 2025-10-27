@@ -144,10 +144,8 @@ mysql -u brieflyuser -p brieflylearn -e "SHOW TABLES;"
 mkdir -p /var/www
 cd /var/www
 
-# Clone backend
-git clone https://github.com/PanapatWonganan/brieflylearn.git brieflylearn-repo
-cp -r brieflylearn-repo/fitness-lms-admin /var/www/backend
-rm -rf brieflylearn-repo
+# Clone backend repository
+git clone https://github.com/PanapatWonganan/brieflylearn-backend.git backend
 
 cd /var/www/backend
 ```
@@ -264,7 +262,7 @@ curl http://localhost:8000/api/v1/health
 
 ```bash
 cd /var/www
-git clone https://github.com/PanapatWonganan/brieflylms.git frontend
+git clone https://github.com/PanapatWonganan/brieflylearn-frontend.git frontend
 cd frontend
 ```
 

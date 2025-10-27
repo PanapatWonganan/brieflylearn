@@ -110,20 +110,13 @@ echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━�
 mkdir -p /var/www
 cd /var/www
 
-# Clone repository
-if [ -d "brieflylearn-repo" ]; then
-    rm -rf brieflylearn-repo
-fi
-
-echo -e "${YELLOW}Cloning repository...${NC}"
-git clone https://github.com/PanapatWonganan/brieflylearn.git brieflylearn-repo
-
-# Copy backend
+# Clone backend repository
 if [ -d "backend" ]; then
     rm -rf backend
 fi
-cp -r brieflylearn-repo/fitness-lms-admin backend
-rm -rf brieflylearn-repo
+
+echo -e "${YELLOW}Cloning backend repository...${NC}"
+git clone https://github.com/PanapatWonganan/brieflylearn-backend.git backend
 
 cd /var/www/backend
 
@@ -205,8 +198,8 @@ if [ -d "frontend" ]; then
     rm -rf frontend
 fi
 
-echo -e "${YELLOW}Cloning frontend...${NC}"
-git clone https://github.com/PanapatWonganan/brieflylms.git frontend
+echo -e "${YELLOW}Cloning frontend repository...${NC}"
+git clone https://github.com/PanapatWonganan/brieflylearn-frontend.git frontend
 cd frontend
 
 # Configure environment
