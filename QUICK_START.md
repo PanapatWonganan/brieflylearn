@@ -37,7 +37,7 @@ bash setup-ssl.sh
 
 เปิดเบราว์เซอร์:
 ```
-https://brieflylearn.com
+https://antiparallel.app
 ```
 
 ทดสอบ Register และ Login!
@@ -47,9 +47,9 @@ https://brieflylearn.com
 ## ✅ เสร็จแล้ว!
 
 เว็บคุณพร้อมใช้งานที่:
-- **Frontend**: https://brieflylearn.com
-- **Backend API**: https://api.brieflylearn.com
-- **Admin**: https://api.brieflylearn.com/admin
+- **Frontend**: https://antiparallel.app
+- **Backend API**: https://api.antiparallel.app
+- **Admin**: https://api.antiparallel.app/admin
 
 ---
 
@@ -57,19 +57,19 @@ https://brieflylearn.com
 
 ### ทดสอบ Backend API:
 ```bash
-curl https://api.brieflylearn.com/api/v1/health
+curl https://api.antiparallel.app/api/v1/health
 ```
 
 ### ทดสอบ Register:
 ```bash
-curl -X POST https://api.brieflylearn.com/api/v1/auth/register \
+curl -X POST https://api.antiparallel.app/api/v1/auth/register \
   -H 'Content-Type: application/json' \
   -d '{"email":"test@test.com","password":"test1234","full_name":"Test User"}'
 ```
 
 ### ทดสอบ Login:
 ```bash
-curl -X POST https://api.brieflylearn.com/api/v1/auth/login \
+curl -X POST https://api.antiparallel.app/api/v1/auth/login \
   -H 'Content-Type: application/json' \
   -d '{"email":"test@test.com","password":"test1234"}'
 ```
@@ -123,11 +123,11 @@ tail -50 /var/log/brieflylearn-backend-error.log
 tail -50 /var/log/brieflylearn-frontend-error.log
 
 # 3. Test API
-curl https://api.brieflylearn.com/api/v1/health
+curl https://api.antiparallel.app/api/v1/health
 
 # 4. Check DNS
-dig brieflylearn.com +short
-dig api.brieflylearn.com +short
+dig antiparallel.app +short
+dig api.antiparallel.app +short
 ```
 
 ---

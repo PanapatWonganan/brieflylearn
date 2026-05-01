@@ -93,8 +93,9 @@ systemctl enable mysql
 
 # Create database and user
 echo -e "${YELLOW}Creating database and user...${NC}"
+DB_PASSWORD="${DB_PASSWORD:-changeme}"
 mysql -e "CREATE DATABASE IF NOT EXISTS brieflylearn CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -e "CREATE USER IF NOT EXISTS 'brieflyuser'@'localhost' IDENTIFIED BY 'brieflypass_2024';"
+mysql -e "CREATE USER IF NOT EXISTS 'brieflyuser'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
 mysql -e "GRANT ALL PRIVILEGES ON brieflylearn.* TO 'brieflyuser'@'localhost';"
 mysql -e "FLUSH PRIVILEGES;"
 
@@ -131,20 +132,20 @@ APP_NAME="BrieflyLearn API"
 APP_ENV=production
 APP_KEY=
 APP_DEBUG=false
-APP_URL=https://api.brieflylearn.com
+APP_URL=https://api.antiparallel.app
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=brieflylearn
 DB_USERNAME=brieflyuser
-DB_PASSWORD=brieflypass_2024
+DB_PASSWORD=${DB_PASSWORD:-changeme}
 
 CACHE_DRIVER=file
 QUEUE_CONNECTION=database
 SESSION_DRIVER=file
 
-FILAMENT_DOMAIN=api.brieflylearn.com
+FILAMENT_DOMAIN=api.antiparallel.app
 ENVEOF
 
 php artisan key:generate --force
@@ -179,7 +180,7 @@ echo -e "${YELLOW}Downloading database backup...${NC}"
 cd /tmp
 if wget -q https://raw.githubusercontent.com/PanapatWonganan/brieflylearn/main/database_backup.sql; then
     echo -e "${YELLOW}Importing database...${NC}"
-    mysql -u brieflyuser -pbrieflypass_2024 brieflylearn < /tmp/database_backup.sql
+    mysql -u brieflyuser -p${DB_PASSWORD:-changeme} brieflylearn < /tmp/database_backup.sql
     echo -e "${GREEN}✅ Database imported successfully!${NC}"
 else
     echo -e "${YELLOW}⚠️  Could not download database backup. You'll need to import manually.${NC}"
@@ -204,8 +205,8 @@ cd frontend
 
 # Configure environment
 cat > .env.local << 'FRONTENVEOF'
-NEXT_PUBLIC_API_URL=https://api.brieflylearn.com
-NEXT_PUBLIC_APP_URL=https://brieflylearn.com
+NEXT_PUBLIC_API_URL=https://api.antiparallel.app
+NEXT_PUBLIC_APP_URL=https://antiparallel.app
 NODE_ENV=production
 PORT=3000
 FRONTENVEOF
@@ -288,7 +289,7 @@ echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━�
 cat > /etc/nginx/sites-available/backend << 'BACKENDNGINX'
 server {
     listen 80;
-    server_name api.brieflylearn.com;
+    server_name api.antiparallel.app;
 
     root /var/www/backend/public;
     index index.php;
@@ -323,7 +324,7 @@ BACKENDNGINX
 cat > /etc/nginx/sites-available/frontend << 'FRONTENDNGINX'
 server {
     listen 80;
-    server_name brieflylearn.com www.brieflylearn.com;
+    server_name antiparallel.app www.antiparallel.app;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -376,14 +377,14 @@ systemctl status nextjs-frontend --no-pager | head -5
 systemctl status nginx --no-pager | head -5
 
 echo -e "\n${YELLOW}🔗 Your Application URLs:${NC}"
-echo -e "  Frontend: ${GREEN}https://brieflylearn.com${NC}"
-echo -e "  Backend API: ${GREEN}https://api.brieflylearn.com${NC}"
-echo -e "  Admin Panel: ${GREEN}https://api.brieflylearn.com/admin${NC}"
+echo -e "  Frontend: ${GREEN}https://antiparallel.app${NC}"
+echo -e "  Backend API: ${GREEN}https://api.antiparallel.app${NC}"
+echo -e "  Admin Panel: ${GREEN}https://api.antiparallel.app/admin${NC}"
 
 echo -e "\n${YELLOW}📝 Next Steps:${NC}"
 echo "  1. Configure Cloudflare DNS:"
-echo "     - brieflylearn.com → 207.148.76.203"
-echo "     - api.brieflylearn.com → 207.148.76.203"
+echo "     - antiparallel.app → 207.148.76.203"
+echo "     - api.antiparallel.app → 207.148.76.203"
 echo "  2. Set Cloudflare SSL/TLS to 'Flexible'"
 echo "  3. Test your application"
 

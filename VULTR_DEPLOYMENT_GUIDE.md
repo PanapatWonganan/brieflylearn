@@ -2,7 +2,7 @@
 
 ## 📌 ภาพรวม
 
-**Domain**: brieflylearn.com
+**Domain**: antiparallel.app
 **Server**: Vultr Ubuntu 22.04 LTS
 **Architecture**:
 - Frontend (Next.js) → Vercel or Vultr
@@ -15,11 +15,11 @@
 ## 🎯 สถาปัตยกรรมระบบ
 
 ```
-brieflylearn.com (Vercel/Vultr)
+antiparallel.app (Vercel/Vultr)
     ↓
     API Calls
     ↓
-api.brieflylearn.com (Vultr Ubuntu)
+api.antiparallel.app (Vultr Ubuntu)
     ├── Laravel Backend (Port 8000)
     ├── Admin Panel (Filament)
     └── MySQL Database (Port 3306)
@@ -358,7 +358,7 @@ APP_NAME="BrieflyLearn"
 APP_ENV=production
 APP_KEY=
 APP_DEBUG=false
-APP_URL=https://api.brieflylearn.com
+APP_URL=https://api.antiparallel.app
 
 LOG_CHANNEL=stack
 LOG_LEVEL=error
@@ -378,8 +378,8 @@ SESSION_DRIVER=file
 SESSION_LIFETIME=120
 
 # Frontend URL
-FRONTEND_URL=https://brieflylearn.com
-SANCTUM_STATEFUL_DOMAINS=brieflylearn.com,www.brieflylearn.com
+FRONTEND_URL=https://antiparallel.app
+SANCTUM_STATEFUL_DOMAINS=antiparallel.app,www.antiparallel.app
 
 # Mail Configuration (ตั้งค่าตาม SMTP ที่ใช้)
 MAIL_MAILER=smtp
@@ -388,7 +388,7 @@ MAIL_PORT=587
 MAIL_USERNAME=your-email@gmail.com
 MAIL_PASSWORD=your-app-password
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=noreply@brieflylearn.com
+MAIL_FROM_ADDRESS=noreply@antiparallel.app
 MAIL_FROM_NAME="BrieflyLearn"
 ```
 
@@ -428,14 +428,14 @@ exit
 ### 6.1 สร้าง Nginx Configuration สำหรับ API
 
 ```bash
-nano /etc/nginx/sites-available/api.brieflylearn.com
+nano /etc/nginx/sites-available/api.antiparallel.app
 ```
 
 ```nginx
 server {
     listen 80;
     listen [::]:80;
-    server_name api.brieflylearn.com;
+    server_name api.antiparallel.app;
     root /var/www/brieflylearn/public;
 
     add_header X-Frame-Options "SAMEORIGIN";
@@ -469,14 +469,14 @@ server {
 ### 6.2 สร้าง Nginx Configuration สำหรับ Admin Panel
 
 ```bash
-nano /etc/nginx/sites-available/admin.brieflylearn.com
+nano /etc/nginx/sites-available/api.antiparallel.app
 ```
 
 ```nginx
 server {
     listen 80;
     listen [::]:80;
-    server_name admin.brieflylearn.com;
+    server_name api.antiparallel.app;
     root /var/www/brieflylearn/public;
 
     add_header X-Frame-Options "SAMEORIGIN";
@@ -511,8 +511,8 @@ server {
 
 ```bash
 # สร้าง symbolic links
-ln -s /etc/nginx/sites-available/api.brieflylearn.com /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/admin.brieflylearn.com /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/api.antiparallel.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/api.antiparallel.app /etc/nginx/sites-enabled/
 
 # ลบ default site
 rm /etc/nginx/sites-enabled/default
@@ -552,12 +552,12 @@ A       admin   45.76.123.45
 
 ```bash
 # ทดสอบ DNS (จาก Local machine)
-nslookup api.brieflylearn.com
-nslookup admin.brieflylearn.com
+nslookup api.antiparallel.app
+nslookup api.antiparallel.app
 
 # หรือ
-dig api.brieflylearn.com
-dig admin.brieflylearn.com
+dig api.antiparallel.app
+dig api.antiparallel.app
 ```
 
 ---
@@ -567,11 +567,11 @@ dig admin.brieflylearn.com
 ### 8.1 ติดตั้ง SSL ด้วย Let's Encrypt
 
 ```bash
-# สำหรับ api.brieflylearn.com
-certbot --nginx -d api.brieflylearn.com
+# สำหรับ api.antiparallel.app
+certbot --nginx -d api.antiparallel.app
 
-# สำหรับ admin.brieflylearn.com
-certbot --nginx -d admin.brieflylearn.com
+# สำหรับ api.antiparallel.app
+certbot --nginx -d api.antiparallel.app
 
 # ตอบคำถาม:
 # - Email: your-email@example.com
@@ -611,14 +611,14 @@ npx vercel --prod
 
 **Environment Variables บน Vercel:**
 ```env
-NEXT_PUBLIC_APP_URL=https://brieflylearn.com
-NEXT_PUBLIC_API_URL=https://api.brieflylearn.com/api/v1
+NEXT_PUBLIC_APP_URL=https://antiparallel.app
+NEXT_PUBLIC_API_URL=https://api.antiparallel.app/api/v1
 NODE_ENV=production
 ```
 
 **Domain Settings บน Vercel:**
-- Add domain: `brieflylearn.com`
-- Add domain: `www.brieflylearn.com`
+- Add domain: `antiparallel.app`
+- Add domain: `www.antiparallel.app`
 
 ### Option B: Deploy บน Vultr (เครื่องเดียวกับ Backend)
 
@@ -633,8 +633,8 @@ npm install
 
 # สร้าง .env.production
 cat > .env.production << 'EOF'
-NEXT_PUBLIC_APP_URL=https://brieflylearn.com
-NEXT_PUBLIC_API_URL=https://api.brieflylearn.com/api/v1
+NEXT_PUBLIC_APP_URL=https://antiparallel.app
+NEXT_PUBLIC_API_URL=https://api.antiparallel.app/api/v1
 NODE_ENV=production
 EOF
 
@@ -653,14 +653,14 @@ pm2 startup
 **Nginx Configuration สำหรับ Frontend (ถ้า deploy บน Vultr):**
 
 ```bash
-nano /etc/nginx/sites-available/brieflylearn.com
+nano /etc/nginx/sites-available/antiparallel.app
 ```
 
 ```nginx
 server {
     listen 80;
     listen [::]:80;
-    server_name brieflylearn.com www.brieflylearn.com;
+    server_name antiparallel.app www.antiparallel.app;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -674,12 +674,12 @@ server {
 ```
 
 ```bash
-ln -s /etc/nginx/sites-available/brieflylearn.com /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/antiparallel.app /etc/nginx/sites-enabled/
 nginx -t
 systemctl reload nginx
 
 # ติดตั้ง SSL
-certbot --nginx -d brieflylearn.com -d www.brieflylearn.com
+certbot --nginx -d antiparallel.app -d www.antiparallel.app
 ```
 
 ---
@@ -892,9 +892,9 @@ systemctl enable fail2ban
 
 | Service | URL | Purpose |
 |---------|-----|---------|
-| Frontend | https://brieflylearn.com | เว็บไซต์หลัก |
-| API | https://api.brieflylearn.com/api/v1 | Backend API |
-| Admin Panel | https://admin.brieflylearn.com/admin | Filament Admin |
+| Frontend | https://antiparallel.app | เว็บไซต์หลัก |
+| API | https://api.antiparallel.app/api/v1 | Backend API |
+| Admin Panel | https://api.antiparallel.app/admin | Filament Admin |
 
 ---
 

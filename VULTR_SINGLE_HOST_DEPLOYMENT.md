@@ -11,9 +11,9 @@
 ```
 Vultr Server (207.148.76.203)
 ├── Nginx (Port 80/443)
-│   ├── brieflylearn.com → Next.js (Port 3000)
-│   ├── admin.brieflylearn.com → Laravel Public (Port 8001)
-│   └── api.brieflylearn.com → Laravel API (Port 8001)
+│   ├── antiparallel.app → Next.js (Port 3000)
+│   ├── api.antiparallel.app → Laravel Public (Port 8001)
+│   └── api.antiparallel.app → Laravel API (Port 8001)
 │
 ├── Laravel Backend (Port 8001)
 │   └── /var/www/brieflylearn/backend
@@ -324,7 +324,7 @@ cd /var/www/brieflylearn
 
 ```bash
 # Generate SSH key
-ssh-keygen -t ed25519 -C "server@brieflylearn.com"
+ssh-keygen -t ed25519 -C "server@antiparallel.app"
 # Press Enter 3 times (default location, no passphrase)
 
 # Show public key
@@ -397,7 +397,7 @@ APP_NAME="BrieflyLearn"
 APP_ENV=production
 APP_KEY=
 APP_DEBUG=false
-APP_URL=https://admin.brieflylearn.com
+APP_URL=https://api.antiparallel.app
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -410,8 +410,8 @@ SESSION_DRIVER=file
 SESSION_LIFETIME=120
 
 # CORS - Allow frontend domain
-SANCTUM_STATEFUL_DOMAINS=brieflylearn.com,www.brieflylearn.com
-SESSION_DOMAIN=.brieflylearn.com
+SANCTUM_STATEFUL_DOMAINS=antiparallel.app,www.antiparallel.app
+SESSION_DOMAIN=.antiparallel.app
 ```
 
 **Save:** `Ctrl+X`, `Y`, `Enter`
@@ -467,9 +467,9 @@ nano .env.production
 **Add these values:**
 
 ```env
-NEXT_PUBLIC_API_URL=https://api.brieflylearn.com/api/v1
+NEXT_PUBLIC_API_URL=https://api.antiparallel.app/api/v1
 NEXT_PUBLIC_APP_NAME=BrieflyLearn
-NEXT_PUBLIC_APP_URL=https://brieflylearn.com
+NEXT_PUBLIC_APP_URL=https://antiparallel.app
 NODE_ENV=production
 ```
 
@@ -551,7 +551,7 @@ nano /etc/nginx/sites-available/brieflylearn
 # Backend API & Admin
 server {
     listen 80;
-    server_name admin.brieflylearn.com api.brieflylearn.com;
+    server_name api.antiparallel.app api.antiparallel.app;
     root /var/www/brieflylearn/backend/public;
 
     add_header X-Frame-Options "SAMEORIGIN";
@@ -585,7 +585,7 @@ server {
 # Frontend (Next.js)
 server {
     listen 80;
-    server_name brieflylearn.com www.brieflylearn.com;
+    server_name antiparallel.app www.antiparallel.app;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -610,8 +610,8 @@ server {
 # Redirect www to non-www
 server {
     listen 80;
-    server_name www.brieflylearn.com;
-    return 301 https://brieflylearn.com$request_uri;
+    server_name www.antiparallel.app;
+    return 301 https://antiparallel.app$request_uri;
 }
 ```
 
@@ -665,9 +665,9 @@ apt install -y certbot python3-certbot-nginx
 **ตรวจสอบ DNS:**
 ```bash
 # บนเครื่อง local
-dig brieflylearn.com
-dig admin.brieflylearn.com
-dig api.brieflylearn.com
+dig antiparallel.app
+dig api.antiparallel.app
+dig api.antiparallel.app
 ```
 
 ---
@@ -676,7 +676,7 @@ dig api.brieflylearn.com
 
 ```bash
 # Request certificates for all domains
-certbot --nginx -d brieflylearn.com -d www.brieflylearn.com -d admin.brieflylearn.com -d api.brieflylearn.com
+certbot --nginx -d antiparallel.app -d www.antiparallel.app -d api.antiparallel.app -d api.antiparallel.app
 
 # Follow prompts:
 # - Enter email: your-email@example.com
@@ -724,32 +724,32 @@ pm2 logs brieflylearn-frontend --lines 50
 
 ```bash
 # Test courses API
-curl https://api.brieflylearn.com/api/v1/courses
+curl https://api.antiparallel.app/api/v1/courses
 
 # Should return JSON with courses data
 ```
 
 **Browser Test:**
-- https://admin.brieflylearn.com → ควรเห็นหน้า welcome
-- https://admin.brieflylearn.com/admin → ควรเห็น Filament login
-- https://api.brieflylearn.com/api/v1/courses → ควรได้ JSON data
+- https://api.antiparallel.app → ควรเห็นหน้า welcome
+- https://api.antiparallel.app/admin → ควรเห็น Filament login
+- https://api.antiparallel.app/api/v1/courses → ควรได้ JSON data
 
 ---
 
 ### Step 8.3: Test Frontend
 
 **Browser Test:**
-- https://brieflylearn.com → ควรเห็นหน้าแรก
-- https://brieflylearn.com/courses → ควรเห็น courses จาก API
-- https://brieflylearn.com/garden → ควรเห็น garden feature
+- https://antiparallel.app → ควรเห็นหน้าแรก
+- https://antiparallel.app/courses → ควรเห็น courses จาก API
+- https://antiparallel.app/garden → ควรเห็น garden feature
 
 ---
 
 ### Step 8.4: Test Admin Login
 
-1. ไปที่ https://admin.brieflylearn.com/admin
+1. ไปที่ https://api.antiparallel.app/admin
 2. Login:
-   - Email: `admin@brieflylearn.com`
+   - Email: `admin@antiparallel.app`
    - Password: `admin123`
 3. ควรเข้าสู่ Filament dashboard ได้
 
@@ -1007,9 +1007,9 @@ crontab -e
 - [ ] Nginx configured for all domains
 - [ ] DNS records pointing to server
 - [ ] SSL certificates installed
-- [ ] Backend accessible at https://admin.brieflylearn.com
-- [ ] API accessible at https://api.brieflylearn.com/api/v1/courses
-- [ ] Frontend accessible at https://brieflylearn.com
+- [ ] Backend accessible at https://api.antiparallel.app
+- [ ] API accessible at https://api.antiparallel.app/api/v1/courses
+- [ ] Frontend accessible at https://antiparallel.app
 - [ ] Admin panel login working
 - [ ] Update scripts created
 - [ ] Backup script setup

@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-คุณมี domain: `https://brieflylearn.com/` และ `api.brieflylearn.com`
+คุณมี domain: `https://antiparallel.app/` และ `api.antiparallel.app`
 ระบบจะ deploy แบบ production-ready พร้อม SSL certificate
 
 ---
@@ -11,9 +11,9 @@
 
 ก่อน deploy ตรวจสอบให้แน่ใจว่า:
 
-- [ ] Domain `brieflylearn.com` ชี้ไปที่ VPS IP: `207.148.76.203` (A Record)
-- [ ] Domain `www.brieflylearn.com` ชี้ไปที่ VPS IP: `207.148.76.203` (A Record)
-- [ ] Domain `api.brieflylearn.com` ชี้ไปที่ VPS IP: `207.148.76.203` (A Record)
+- [ ] Domain `antiparallel.app` ชี้ไปที่ VPS IP: `207.148.76.203` (A Record)
+- [ ] Domain `www.antiparallel.app` ชี้ไปที่ VPS IP: `207.148.76.203` (A Record)
+- [ ] Domain `api.antiparallel.app` ชี้ไปที่ VPS IP: `207.148.76.203` (A Record)
 - [ ] SSH access ไปยัง `root@207.148.76.203` ทำงานได้
 - [ ] VPS มี MySQL, PHP 8.2, Node.js, Nginx ติดตั้งแล้ว
 - [ ] MySQL database `brieflylearn` และ user `brieflyuser` สร้างไว้แล้ว
@@ -21,9 +21,9 @@
 ### ตรวจสอบ DNS:
 ```bash
 # จากเครื่องคุณ
-dig brieflylearn.com
-dig www.brieflylearn.com
-dig api.brieflylearn.com
+dig antiparallel.app
+dig www.antiparallel.app
+dig api.antiparallel.app
 
 # ควรแสดง IP: 207.148.76.203 ทั้ง 3 domain
 ```
@@ -79,7 +79,7 @@ bash deploy-with-domain.sh
    - Clone จาก GitHub
    - Install dependencies
    - Build production
-   - สร้าง `.env.local` ที่ชี้ไปยัง `api.brieflylearn.com`
+   - สร้าง `.env.local` ที่ชี้ไปยัง `api.antiparallel.app`
 
 4. ✅ Setup Systemd Services
    - `brieflylearn-backend.service` (Port 8000)
@@ -87,8 +87,8 @@ bash deploy-with-domain.sh
    - Auto-start on boot
 
 5. ✅ Configure Nginx
-   - `brieflylearn.com` → Frontend (Port 3000)
-   - `api.brieflylearn.com` → Backend (Port 8000)
+   - `antiparallel.app` → Frontend (Port 3000)
+   - `api.antiparallel.app` → Backend (Port 8000)
    - CORS headers
 
 6. ✅ Test Services
@@ -109,9 +109,9 @@ bash setup-ssl.sh
 
 1. ✅ Install Certbot
 2. ✅ Obtain Let's Encrypt SSL certificates สำหรับ:
-   - `brieflylearn.com`
-   - `www.brieflylearn.com`
-   - `api.brieflylearn.com`
+   - `antiparallel.app`
+   - `www.antiparallel.app`
+   - `api.antiparallel.app`
 3. ✅ Update Backend `.env` เป็น HTTPS
 4. ✅ Update Frontend `.env.local` เป็น HTTPS
 5. ✅ Rebuild Frontend
@@ -126,7 +126,7 @@ bash setup-ssl.sh
 
 ```bash
 # Health Check
-curl https://api.brieflylearn.com/api/v1/health
+curl https://api.antiparallel.app/api/v1/health
 
 # Expected response:
 # {"status":"ok","timestamp":"...","service":"BoostMe Admin API"}
@@ -135,7 +135,7 @@ curl https://api.brieflylearn.com/api/v1/health
 ### 2. Test Register API
 
 ```bash
-curl -X POST https://api.brieflylearn.com/api/v1/auth/register \
+curl -X POST https://api.antiparallel.app/api/v1/auth/register \
   -H 'Content-Type: application/json' \
   -d '{
     "email": "test@example.com",
@@ -151,7 +151,7 @@ curl -X POST https://api.brieflylearn.com/api/v1/auth/register \
 ### 3. Test Login API
 
 ```bash
-curl -X POST https://api.brieflylearn.com/api/v1/auth/login \
+curl -X POST https://api.antiparallel.app/api/v1/auth/login \
   -H 'Content-Type: application/json' \
   -d '{
     "email": "test@example.com",
@@ -166,7 +166,7 @@ curl -X POST https://api.brieflylearn.com/api/v1/auth/login \
 
 เปิดเบราว์เซอร์:
 ```
-https://brieflylearn.com
+https://antiparallel.app
 ```
 
 ทดสอบ:
@@ -267,7 +267,7 @@ netstat -tlnp | grep 3000
 cat /var/www/backend/.env | grep CORS
 
 # ควรเห็น:
-# CORS_ALLOWED_ORIGINS=https://brieflylearn.com,https://www.brieflylearn.com,...
+# CORS_ALLOWED_ORIGINS=https://antiparallel.app,https://www.antiparallel.app,...
 
 # ถ้าผิด แก้แล้ว restart
 nano /var/www/backend/.env
@@ -304,8 +304,8 @@ mysql -u brieflyuser -pbrieflypass_2024 brieflylearn -e "DESCRIBE users;"
 
 ```bash
 # ตรวจสอบ DNS จาก VPS
-dig brieflylearn.com @8.8.8.8
-dig api.brieflylearn.com @8.8.8.8
+dig antiparallel.app @8.8.8.8
+dig api.antiparallel.app @8.8.8.8
 
 # ตรวจสอบ Nginx config
 nginx -t
@@ -438,11 +438,11 @@ free -h
 หลังจาก deploy สำเร็จ:
 
 ### URLs:
-- ✅ **Frontend**: https://brieflylearn.com
-- ✅ **WWW Redirect**: https://www.brieflylearn.com → https://brieflylearn.com
-- ✅ **Backend API**: https://api.brieflylearn.com
-- ✅ **Admin Panel**: https://api.brieflylearn.com/admin
-- ✅ **Health Check**: https://api.brieflylearn.com/api/v1/health
+- ✅ **Frontend**: https://antiparallel.app
+- ✅ **WWW Redirect**: https://www.antiparallel.app → https://antiparallel.app
+- ✅ **Backend API**: https://api.antiparallel.app
+- ✅ **Admin Panel**: https://api.antiparallel.app/admin
+- ✅ **Health Check**: https://api.antiparallel.app/api/v1/health
 
 ### Services Running:
 ```
@@ -454,11 +454,11 @@ free -h
 
 ### SSL Certificates:
 ```
-Certificate Name: brieflylearn.com
-  Domains: brieflylearn.com www.brieflylearn.com api.brieflylearn.com
+Certificate Name: antiparallel.app
+  Domains: antiparallel.app www.antiparallel.app api.antiparallel.app
   Expiry Date: (90 days from installation)
-  Certificate Path: /etc/letsencrypt/live/brieflylearn.com/fullchain.pem
-  Private Key Path: /etc/letsencrypt/live/brieflylearn.com/privkey.pem
+  Certificate Path: /etc/letsencrypt/live/antiparallel.app/fullchain.pem
+  Private Key Path: /etc/letsencrypt/live/antiparallel.app/privkey.pem
 ```
 
 ---
@@ -466,8 +466,8 @@ Certificate Name: brieflylearn.com
 ## ✅ Post-Deployment Checklist
 
 - [ ] All services are running
-- [ ] Frontend accessible via https://brieflylearn.com
-- [ ] Backend API responding at https://api.brieflylearn.com/api/v1/health
+- [ ] Frontend accessible via https://antiparallel.app
+- [ ] Backend API responding at https://api.antiparallel.app/api/v1/health
 - [ ] Register function working (test via curl)
 - [ ] Login function working (test via curl)
 - [ ] Register via frontend working
@@ -485,8 +485,8 @@ Certificate Name: brieflylearn.com
 หาก checklist ข้างบนผ่านหมด แสดงว่า deployment สำเร็จแล้วครับ!
 
 ระบบพร้อมใช้งานที่:
-- **https://brieflylearn.com**
-- **https://api.brieflylearn.com**
+- **https://antiparallel.app**
+- **https://api.antiparallel.app**
 
 ---
 
@@ -530,14 +530,14 @@ $(grep NEXT_PUBLIC_API_URL /var/www/frontend/.env.local)
 === Network Tests ===
 Backend Health (local): $(curl -s http://localhost:8000/api/v1/health)
 Frontend (local): $(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000)
-Backend Health (domain): $(curl -s https://api.brieflylearn.com/api/v1/health)
+Backend Health (domain): $(curl -s https://api.antiparallel.app/api/v1/health)
 
 === SSL Certificate ===
 $(certbot certificates)
 
 === DNS Check ===
-$(dig brieflylearn.com +short)
-$(dig api.brieflylearn.com +short)
+$(dig antiparallel.app +short)
+$(dig api.antiparallel.app +short)
 EOF
 
 cat debug-info.txt

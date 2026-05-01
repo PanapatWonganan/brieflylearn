@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # BrieflyLearn - Deployment with Domain Support
-# Supports: https://brieflylearn.com/
-# Backend API: Will be at https://brieflylearn.com/api or https://api.brieflylearn.com
+# Supports: https://antiparallel.app/
+# Backend API: Will be at https://antiparallel.app/api or https://api.antiparallel.app
 
 set -e
 
@@ -23,9 +23,9 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Domain Configuration
-MAIN_DOMAIN="brieflylearn.com"
-WWW_DOMAIN="www.brieflylearn.com"
-API_SUBDOMAIN="api.brieflylearn.com"
+MAIN_DOMAIN="antiparallel.app"
+WWW_DOMAIN="www.antiparallel.app"
+API_SUBDOMAIN="api.antiparallel.app"
 VPS_IP=$(hostname -I | awk '{print $1}')
 
 echo -e "${YELLOW}📡 VPS IP Address: ${VPS_IP}${NC}"
@@ -81,7 +81,7 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=brieflylearn
 DB_USERNAME=brieflyuser
-DB_PASSWORD=brieflypass_2024
+DB_PASSWORD=${DB_PASSWORD:-changeme}
 
 CACHE_DRIVER=file
 QUEUE_CONNECTION=database
@@ -124,7 +124,7 @@ echo -e "${YELLOW}Downloading database backup...${NC}"
 cd /tmp
 if wget -q https://raw.githubusercontent.com/PanapatWonganan/brieflylearn/main/database_backup.sql; then
     echo -e "${YELLOW}Importing database...${NC}"
-    mysql -u brieflyuser -pbrieflypass_2024 brieflylearn < /tmp/database_backup.sql
+    mysql -u brieflyuser -p${DB_PASSWORD:-changeme} brieflylearn < /tmp/database_backup.sql
     echo -e "${GREEN}✅ Database imported successfully!${NC}"
 else
     echo -e "${YELLOW}⚠️  Could not download database backup. Running migrations instead...${NC}"
@@ -159,14 +159,14 @@ NODE_ENV=production
 PORT=3000
 
 # Database (for Next.js API routes if needed)
-DATABASE_URL="mysql://brieflyuser:brieflypass_2024@localhost:3306/brieflylearn"
+DATABASE_URL="mysql://brieflyuser:${DB_PASSWORD:-changeme}@localhost:3306/brieflylearn"
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=brieflylearn
 DB_USER=brieflyuser
-DB_PASSWORD=brieflypass_2024
+DB_PASSWORD=${DB_PASSWORD:-changeme}
 
-JWT_SECRET=your-super-secret-jwt-key-production-2024
+JWT_SECRET=${JWT_SECRET:-changeme}
 FRONTENVEOF
 
 echo -e "${YELLOW}Installing npm dependencies...${NC}"
@@ -260,11 +260,11 @@ echo -e "\n${BLUE}━━━━━━━━━━━━━━━━━━━━�
 echo -e "${GREEN}🌐 Step 5: Configuring Nginx${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 
-# Backend Nginx Config (api.brieflylearn.com)
+# Backend Nginx Config (api.antiparallel.app)
 cat > /etc/nginx/sites-available/brieflylearn-backend << 'BACKENDNGINX'
 server {
     listen 80;
-    server_name api.brieflylearn.com;
+    server_name api.antiparallel.app;
 
     location / {
         proxy_pass http://127.0.0.1:8000;
@@ -289,11 +289,11 @@ server {
 }
 BACKENDNGINX
 
-# Frontend Nginx Config (brieflylearn.com)
+# Frontend Nginx Config (antiparallel.app)
 cat > /etc/nginx/sites-available/brieflylearn-frontend << 'FRONTENDNGINX'
 server {
     listen 80;
-    server_name brieflylearn.com www.brieflylearn.com;
+    server_name antiparallel.app www.antiparallel.app;
 
     location / {
         proxy_pass http://127.0.0.1:3000;

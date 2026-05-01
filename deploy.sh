@@ -1,168 +1,244 @@
 #!/bin/bash
+set -euo pipefail
 
-# BrieflyLearn Deployment Script for Vultr VPS
-# Usage: ./deploy.sh
+# ============================================================================
+# BrieflyLearn — One-Click Deploy (run from Mac)
+# ============================================================================
+# Commits, pushes both repos to GitHub, then SSH to VPS to redeploy.
+#
+# Usage:
+#   bash deploy.sh                    # Deploy both backend + frontend
+#   bash deploy.sh backend            # Deploy backend only
+#   bash deploy.sh frontend           # Deploy frontend only
+#   bash deploy.sh "commit message"   # Deploy both with custom commit message
+#   bash deploy.sh backend "message"  # Deploy backend with custom message
+#   bash deploy.sh frontend "message" # Deploy frontend with custom message
+# ============================================================================
 
-set -e  # Exit on error
+VPS_IP="45.32.125.76"
+VPS_USER="root"
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+BACKEND_DIR="${BASE_DIR}/fitness-lms-admin"
+FRONTEND_DIR="${BASE_DIR}/fitness-lms"
 
-echo "🚀 Starting BrieflyLearn Deployment..."
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+NC='\033[0m'
 
-# Configuration
-APP_DIR="/var/www/brieflylearn"
-APP_NAME="brieflylearn"
-NODE_ENV="production"
+log()  { echo -e "${GREEN}[OK]${NC} $1"; }
+warn() { echo -e "${YELLOW}[!]${NC} $1"; }
+err()  { echo -e "${RED}[X]${NC} $1"; exit 1; }
+step() { echo -e "\n${CYAN}=== $1 ===${NC}\n"; }
 
-# Colors for output
+# Parse arguments
+TARGET="all"
+COMMIT_MSG=""
+
+if [ $# -ge 1 ]; then
+    case "$1" in
+        backend|frontend|all)
+            TARGET="$1"
+            COMMIT_MSG="${2:-}"
+            ;;
+        *)
+            COMMIT_MSG="$1"
+            ;;
+    esac
+fi
+
+if [ -z "${COMMIT_MSG}" ]; then
+    COMMIT_MSG="Update $(date '+%Y-%m-%d %H:%M')"
+fi
+
+echo -e "${CYAN}================================${NC}"
+echo -e "${CYAN} BrieflyLearn Deploy${NC}"
+echo -e "${CYAN}================================${NC}"
+echo -e "  Target:  ${GREEN}${TARGET}${NC}"
+echo -e "  Commit:  ${GREEN}${COMMIT_MSG}${NC}"
+echo -e "  VPS:     ${GREEN}${VPS_USER}@${VPS_IP}${NC}"
+echo ""
+
+# ── Push Backend ──────────────────────────────────────────────────────────
+
+push_backend() {
+    step "Pushing Backend to GitHub"
+
+    cd "${BACKEND_DIR}"
+
+    if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+        warn "No changes in backend — skipping push"
+        return 0
+    fi
+
+    git add -A
+    git commit -m "${COMMIT_MSG}" || true
+    git push origin main
+    log "Backend pushed to GitHub"
+}
+
+# ── Push Frontend ─────────────────────────────────────────────────────────
+
+push_frontend() {
+    step "Pushing Frontend to GitHub"
+
+    cd "${FRONTEND_DIR}"
+
+    if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+        warn "No changes in frontend — skipping push"
+        return 0
+    fi
+
+    git add -A
+    git commit -m "${COMMIT_MSG}" || true
+    git push origin main
+    log "Frontend pushed to GitHub"
+}
+
+# ── Deploy on VPS ─────────────────────────────────────────────────────────
+
+deploy_vps() {
+    step "Deploying on VPS (${VPS_IP})"
+
+    ssh -i ~/.ssh/brieflylearn_ed25519 -o IdentitiesOnly=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_IP}" bash <<REMOTE
+set -euo pipefail
+
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
-NC='\033[0m' # No Color
+CYAN='\033[0;36m'
+NC='\033[0m'
 
-# Check if running as root
-if [ "$EUID" -ne 0 ]; then
-    echo -e "${RED}❌ Please run as root (use sudo)${NC}"
-    exit 1
+log()  { echo -e "\${GREEN}[OK]\${NC} \$1"; }
+warn() { echo -e "\${YELLOW}[!]\${NC} \$1"; }
+step() { echo -e "\n\${CYAN}=== \$1 ===\${NC}\n"; }
+
+TARGET="${TARGET}"
+PHP_VERSION="8.3"
+BACKEND_DIR="/var/www/brieflylearn/backend"
+FRONTEND_DIR="/var/www/brieflylearn/frontend"
+
+if [ "\${TARGET}" = "all" ] || [ "\${TARGET}" = "backend" ]; then
+    step "Redeploying Backend"
+
+    cd "\${BACKEND_DIR}"
+    php artisan down --retry=30 || true
+
+    git pull origin main
+    log "Code pulled"
+
+    composer install --no-dev --optimize-autoloader --no-interaction
+    log "Composer done"
+
+    php artisan migrate --force
+    log "Migrations done"
+
+    php artisan config:clear
+    php artisan route:clear
+    php artisan view:clear
+    php artisan config:cache
+    php artisan route:cache
+    php artisan view:cache
+    log "Caches rebuilt"
+
+    chown -R www-data:www-data "\${BACKEND_DIR}"
+    chmod -R 775 "\${BACKEND_DIR}/storage"
+    chmod -R 775 "\${BACKEND_DIR}/bootstrap/cache"
+
+    # Ensure PHP upload limits are set for video uploads
+    PHP_INI_DIR="/etc/php/\${PHP_VERSION}/fpm/conf.d"
+    cat > "\${PHP_INI_DIR}/99-brieflylearn-uploads.ini" <<'PHPINI'
+upload_max_filesize = 512M
+post_max_size = 512M
+max_execution_time = 600
+max_input_time = 600
+memory_limit = 512M
+PHPINI
+    log "PHP upload limits configured"
+
+    # Sync nginx config from repo
+    if [ -f "\${BACKEND_DIR}/../nginx-configs/api.antiparallel.app.conf" ]; then
+        cp "\${BACKEND_DIR}/../nginx-configs/api.antiparallel.app.conf" /etc/nginx/sites-available/api.antiparallel.app
+        nginx -t && systemctl reload nginx
+        log "Nginx config updated"
+    fi
+
+    systemctl restart php\${PHP_VERSION}-fpm
+    log "PHP-FPM restarted"
+
+    php artisan queue:restart
+    systemctl restart brieflylearn-queue || true
+    log "Queue restarted"
+
+    php artisan up
+    log "Backend is live"
 fi
 
-echo -e "${YELLOW}📦 Step 1: Installing system dependencies...${NC}"
-apt-get update
-apt-get install -y curl git nginx certbot python3-certbot-nginx
+if [ "\${TARGET}" = "all" ] || [ "\${TARGET}" = "frontend" ]; then
+    step "Redeploying Frontend"
 
-# Install Node.js 20.x if not installed
-if ! command -v node &> /dev/null; then
-    echo -e "${YELLOW}📦 Installing Node.js 20.x...${NC}"
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-    apt-get install -y nodejs
-else
-    echo -e "${GREEN}✅ Node.js already installed: $(node --version)${NC}"
+    cd "\${FRONTEND_DIR}"
+
+    git pull origin main
+    log "Code pulled"
+
+    npm ci --production=false
+    log "npm done"
+
+    npm run build
+    log "Build done"
+
+    chown -R www-data:www-data "\${FRONTEND_DIR}"
+
+    pm2 restart brieflylearn-frontend
+    log "PM2 restarted"
+
+    sleep 3
+    HTTP_CODE=\$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/ 2>/dev/null || echo "000")
+    if [ "\${HTTP_CODE}" = "200" ]; then
+        log "Frontend health check: OK"
+    else
+        warn "Frontend health check: \${HTTP_CODE} (may still be starting)"
+    fi
 fi
 
-# Install PM2 globally if not installed
-if ! command -v pm2 &> /dev/null; then
-    echo -e "${YELLOW}📦 Installing PM2...${NC}"
-    npm install -g pm2
-else
-    echo -e "${GREEN}✅ PM2 already installed: $(pm2 --version)${NC}"
-fi
+step "Deploy Complete"
 
-echo -e "${YELLOW}📂 Step 2: Setting up application directory...${NC}"
-# Create app directory if doesn't exist
-if [ ! -d "$APP_DIR" ]; then
-    mkdir -p $APP_DIR
-    echo -e "${GREEN}✅ Created directory: $APP_DIR${NC}"
-fi
+echo "Service Status:"
+echo "-------------------"
+systemctl is-active --quiet nginx && echo -e "  Nginx:       \${GREEN}running\${NC}" || echo -e "  Nginx:       \${RED}stopped\${NC}"
+systemctl is-active --quiet php\${PHP_VERSION}-fpm && echo -e "  PHP-FPM:     \${GREEN}running\${NC}" || echo -e "  PHP-FPM:     \${RED}stopped\${NC}"
+systemctl is-active --quiet mysql && echo -e "  MySQL:       \${GREEN}running\${NC}" || echo -e "  MySQL:       \${RED}stopped\${NC}"
+systemctl is-active --quiet brieflylearn-queue && echo -e "  Queue:       \${GREEN}running\${NC}" || echo -e "  Queue:       \${RED}stopped\${NC}"
+pm2 describe brieflylearn-frontend &>/dev/null && echo -e "  Next.js:     \${GREEN}running\${NC}" || echo -e "  Next.js:     \${RED}stopped\${NC}"
+echo ""
+REMOTE
 
-cd $APP_DIR
-
-# Clone or pull repository
-if [ ! -d ".git" ]; then
-    echo -e "${YELLOW}📥 Cloning repository...${NC}"
-    read -p "Enter your GitHub repository URL: " REPO_URL
-    git clone $REPO_URL .
-else
-    echo -e "${YELLOW}📥 Pulling latest changes...${NC}"
-    git pull origin main || git pull origin master
-fi
-
-echo -e "${YELLOW}📦 Step 3: Installing dependencies...${NC}"
-npm install --production=false
-
-echo -e "${YELLOW}🔧 Step 4: Checking environment variables...${NC}"
-if [ ! -f ".env.local" ]; then
-    echo -e "${RED}⚠️  .env.local not found!${NC}"
-    echo -e "${YELLOW}Creating template .env.local file...${NC}"
-    cat > .env.local << 'EOF'
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/brieflylearn"
-
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL="your-supabase-url"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
-SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
-
-# Stripe
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="your-stripe-publishable-key"
-STRIPE_SECRET_KEY="your-stripe-secret-key"
-STRIPE_WEBHOOK_SECRET="your-stripe-webhook-secret"
-
-# NextAuth
-NEXTAUTH_URL="https://yourdomain.com"
-NEXTAUTH_SECRET="your-nextauth-secret"
-
-# App
-NEXT_PUBLIC_APP_URL="https://yourdomain.com"
-EOF
-    echo -e "${YELLOW}⚠️  Please edit .env.local with your actual values!${NC}"
-    exit 1
-else
-    echo -e "${GREEN}✅ .env.local found${NC}"
-fi
-
-echo -e "${YELLOW}🏗️  Step 5: Building application...${NC}"
-npm run build
-
-echo -e "${YELLOW}🔄 Step 6: Managing PM2 process...${NC}"
-# Stop existing process if running
-pm2 stop $APP_NAME 2>/dev/null || true
-pm2 delete $APP_NAME 2>/dev/null || true
-
-# Start with PM2
-pm2 start npm --name $APP_NAME -- start
-pm2 save
-pm2 startup systemd -u root --hp /root
-
-echo -e "${YELLOW}🌐 Step 7: Configuring Nginx...${NC}"
-# Create Nginx configuration
-cat > /etc/nginx/sites-available/$APP_NAME << 'NGINX_EOF'
-server {
-    listen 80;
-    server_name _;  # Replace with your domain
-
-    client_max_body_size 100M;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+    log "VPS deployment complete"
 }
-NGINX_EOF
 
-# Enable site
-ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/$APP_NAME
+# ── Execute ───────────────────────────────────────────────────────────────
 
-# Remove default site if exists
-rm -f /etc/nginx/sites-enabled/default
+# Step 1: Push to GitHub
+case "${TARGET}" in
+    backend)
+        push_backend
+        ;;
+    frontend)
+        push_frontend
+        ;;
+    all)
+        push_backend
+        push_frontend
+        ;;
+esac
 
-# Test Nginx configuration
-nginx -t
+# Step 2: Deploy on VPS
+deploy_vps
 
-# Restart Nginx
-systemctl restart nginx
-systemctl enable nginx
-
-echo -e "${GREEN}✅ Deployment completed successfully!${NC}"
+step "All Done"
+echo -e "  Frontend: ${GREEN}https://antiparallel.app${NC}"
+echo -e "  API:      ${GREEN}https://api.antiparallel.app${NC}"
+echo -e "  Admin:    ${GREEN}https://api.antiparallel.app/admin${NC}"
 echo ""
-echo -e "${YELLOW}📊 Application Status:${NC}"
-pm2 status
-
-echo ""
-echo -e "${YELLOW}🔍 Useful Commands:${NC}"
-echo "  View logs:        pm2 logs $APP_NAME"
-echo "  Restart app:      pm2 restart $APP_NAME"
-echo "  Stop app:         pm2 stop $APP_NAME"
-echo "  Monitor:          pm2 monit"
-echo ""
-echo -e "${YELLOW}🌐 Next Steps:${NC}"
-echo "  1. Point your domain to this server IP: $(curl -s ifconfig.me)"
-echo "  2. Update Nginx config with your domain: nano /etc/nginx/sites-available/$APP_NAME"
-echo "  3. Setup SSL: certbot --nginx -d yourdomain.com"
-echo "  4. Edit environment variables: nano $APP_DIR/.env.local"
-echo ""
-echo -e "${GREEN}🎉 Your app should be running at http://$(curl -s ifconfig.me)${NC}"

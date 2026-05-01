@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # BrieflyLearn - SSL Certificate Setup
-# Sets up Let's Encrypt SSL for brieflylearn.com and api.brieflylearn.com
+# Sets up Let's Encrypt SSL for antiparallel.app and api.antiparallel.app
 
 set -e
 
@@ -21,9 +21,9 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-MAIN_DOMAIN="brieflylearn.com"
-WWW_DOMAIN="www.brieflylearn.com"
-API_SUBDOMAIN="api.brieflylearn.com"
+MAIN_DOMAIN="antiparallel.app"
+WWW_DOMAIN="www.antiparallel.app"
+API_SUBDOMAIN="api.antiparallel.app"
 
 # ============================================
 # Step 1: Install Certbot

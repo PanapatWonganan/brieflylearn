@@ -1,8 +1,8 @@
 # 🚀 BrieflyLearn - Complete Vultr Deployment Guide
 
 **Server IP**: `207.148.76.203`
-**Frontend**: `brieflylearn.com`
-**Backend API**: `api.brieflylearn.com` (optional subdomain)
+**Frontend**: `antiparallel.app`
+**Backend API**: `api.antiparallel.app` (optional subdomain)
 
 ---
 
@@ -170,7 +170,7 @@ APP_NAME="BrieflyLearn API"
 APP_ENV=production
 APP_KEY=
 APP_DEBUG=false
-APP_URL=https://api.brieflylearn.com
+APP_URL=https://api.antiparallel.app
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -183,7 +183,7 @@ CACHE_DRIVER=file
 QUEUE_CONNECTION=database
 SESSION_DRIVER=file
 
-FILAMENT_DOMAIN=api.brieflylearn.com
+FILAMENT_DOMAIN=api.antiparallel.app
 ```
 
 **Generate APP_KEY:**
@@ -271,8 +271,8 @@ cd frontend
 ```bash
 cat > .env.local << 'EOF'
 # API Backend
-NEXT_PUBLIC_API_URL=https://api.brieflylearn.com
-NEXT_PUBLIC_APP_URL=https://brieflylearn.com
+NEXT_PUBLIC_API_URL=https://api.antiparallel.app
+NEXT_PUBLIC_APP_URL=https://antiparallel.app
 
 # App Settings
 NODE_ENV=production
@@ -338,7 +338,7 @@ curl http://localhost:3000
 cat > /etc/nginx/sites-available/backend << 'EOF'
 server {
     listen 80;
-    server_name api.brieflylearn.com;
+    server_name api.antiparallel.app;
 
     root /var/www/backend/public;
     index index.php;
@@ -376,7 +376,7 @@ EOF
 cat > /etc/nginx/sites-available/frontend << 'EOF'
 server {
     listen 80;
-    server_name brieflylearn.com www.brieflylearn.com;
+    server_name antiparallel.app www.antiparallel.app;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -412,9 +412,9 @@ systemctl restart nginx
 
 **Go to Cloudflare Dashboard:**
 
-1. Add A Record: `brieflylearn.com` → `207.148.76.203` (Proxied 🟠)
-2. Add A Record: `www.brieflylearn.com` → `207.148.76.203` (Proxied 🟠)
-3. Add A Record: `api.brieflylearn.com` → `207.148.76.203` (Proxied 🟠)
+1. Add A Record: `antiparallel.app` → `207.148.76.203` (Proxied 🟠)
+2. Add A Record: `www.antiparallel.app` → `207.148.76.203` (Proxied 🟠)
+3. Add A Record: `api.antiparallel.app` → `207.148.76.203` (Proxied 🟠)
 
 ### 6.2 Set Cloudflare SSL Mode
 
@@ -424,11 +424,11 @@ systemctl restart nginx
 ### 6.3 Install SSL Certificates (Optional if using Cloudflare)
 
 ```bash
-# For brieflylearn.com
-certbot --nginx -d brieflylearn.com -d www.brieflylearn.com
+# For antiparallel.app
+certbot --nginx -d antiparallel.app -d www.antiparallel.app
 
-# For api.brieflylearn.com
-certbot --nginx -d api.brieflylearn.com
+# For api.antiparallel.app
+certbot --nginx -d api.antiparallel.app
 ```
 
 ---
@@ -479,9 +479,9 @@ curl http://localhost:3000
 
 ### 8.4 Test in Browser
 
-- Frontend: https://brieflylearn.com
-- Backend API: https://api.brieflylearn.com/api/v1/health
-- Admin Panel: https://api.brieflylearn.com/admin
+- Frontend: https://antiparallel.app
+- Backend API: https://api.antiparallel.app/api/v1/health
+- Admin Panel: https://api.antiparallel.app/admin
 
 ---
 
@@ -590,6 +590,6 @@ cat .env | grep DB_
 **🎉 Deployment Complete!**
 
 Your application should now be accessible at:
-- **Frontend**: https://brieflylearn.com
-- **API**: https://api.brieflylearn.com
-- **Admin**: https://api.brieflylearn.com/admin
+- **Frontend**: https://antiparallel.app
+- **API**: https://api.antiparallel.app
+- **Admin**: https://api.antiparallel.app/admin

@@ -61,14 +61,14 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=brieflylearn
 DB_USERNAME=brieflyuser
-DB_PASSWORD=brieflypass_2024
+DB_PASSWORD=${DB_PASSWORD:-changeme}
 
 CACHE_DRIVER=file
 QUEUE_CONNECTION=database
 SESSION_DRIVER=file
 
 # CORS Configuration - Allow frontend to connect
-CORS_ALLOWED_ORIGINS=http://${VPS_IP}:3000,http://localhost:3000,http://${VPS_IP},https://brieflylearn.com,https://www.brieflylearn.com
+CORS_ALLOWED_ORIGINS=http://${VPS_IP}:3000,http://localhost:3000,http://${VPS_IP},https://antiparallel.app,https://www.antiparallel.app
 FRONTEND_URL=http://${VPS_IP}:3000
 SANCTUM_STATEFUL_DOMAINS=${VPS_IP}:3000,localhost:3000
 
@@ -104,7 +104,7 @@ echo -e "${YELLOW}Downloading database backup...${NC}"
 cd /tmp
 if wget -q https://raw.githubusercontent.com/PanapatWonganan/brieflylearn/main/database_backup.sql; then
     echo -e "${YELLOW}Importing database...${NC}"
-    mysql -u brieflyuser -pbrieflypass_2024 brieflylearn < /tmp/database_backup.sql
+    mysql -u brieflyuser -p${DB_PASSWORD:-changeme} brieflylearn < /tmp/database_backup.sql
     echo -e "${GREEN}✅ Database imported successfully!${NC}"
 else
     echo -e "${YELLOW}⚠️  Could not download database backup. Running migrations instead...${NC}"
@@ -139,14 +139,14 @@ NODE_ENV=production
 PORT=3000
 
 # Database (for Next.js API routes if needed)
-DATABASE_URL="mysql://brieflyuser:brieflypass_2024@localhost:3306/brieflylearn"
+DATABASE_URL="mysql://brieflyuser:${DB_PASSWORD:-changeme}@localhost:3306/brieflylearn"
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=brieflylearn
 DB_USER=brieflyuser
-DB_PASSWORD=brieflypass_2024
+DB_PASSWORD=${DB_PASSWORD:-changeme}
 
-JWT_SECRET=your-super-secret-jwt-key-production-2024
+JWT_SECRET=${JWT_SECRET:-changeme}
 FRONTENVEOF
 
 echo -e "${YELLOW}Installing npm dependencies...${NC}"

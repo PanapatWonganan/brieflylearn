@@ -79,7 +79,7 @@ echo "✅ Database created"
 
 echo "🔑 Step 10: Generate SSH Key for GitHub"
 if [ ! -f ~/.ssh/id_ed25519 ]; then
-    ssh-keygen -t ed25519 -C "deploy@brieflylearn.com" -f ~/.ssh/id_ed25519 -N ""
+    ssh-keygen -t ed25519 -C "deploy@antiparallel.app" -f ~/.ssh/id_ed25519 -N ""
 fi
 echo ""
 echo "=========================================="
@@ -261,7 +261,7 @@ echo "✅ Admin Panel: http://207.148.76.203/admin"
 echo "✅ Frontend: http://207.148.76.203"
 echo ""
 echo "🔑 Admin Login:"
-echo "   Email: admin@brieflylearn.com"
+echo "   Email: admin@antiparallel.app"
 echo "   Password: admin123"
 echo ""
 echo "📊 Check Services:"

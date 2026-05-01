@@ -95,7 +95,7 @@ php artisan migrate:fresh --seed
 
 # 4. Create admin user for Filament
 php artisan make:filament-user
-# Email: admin@brieflylearn.com
+# Email: admin@antiparallel.app
 # Password: (your choice)
 ```
 

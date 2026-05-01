@@ -350,8 +350,8 @@ This project is licensed under the MIT License.
 ## 👥 Team
 
 **BrieflyLearn Team**
-- Email: support@brieflylearn.com
-- Website: https://brieflylearn.com
+- Email: support@antiparallel.app
+- Website: https://antiparallel.app
 
 ---
 
