@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V3 · Personal Letter — AI ฿100M Blueprint</title>
+
+<!-- Fonts: ไทยชุดเดียวกับ V3 Letter TH -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* =========================================================
+     V3 LETTER — EDITABLE VERSION
+     ทุก section มี comment <!-- EDIT: xxx --> ให้หาง่าย
+     ================================================= */
+
+  :root{
+    --accent: #ffe64a;          /* <— เปลี่ยนสี accent ที่นี่ */
+    --ink: #1a1a1a;
+    --paper: #f7f2e8;
+    --muted: #666;
+
+    /* Font stacks — ชุดเดียวกับ V3 Letter TH.html */
+    --font-head: 'IBM Plex Sans Thai', sans-serif;   /* หัวข้อ/headline */
+    --font-body: 'Sarabun', sans-serif;              /* เนื้อหา */
+    --font-sig:  'Chakra Petch', sans-serif;         /* signature / label */
+
+    /* aliases — คลาสเดิมในไฟล์ยังใช้ --font-hand/--font-mono ได้ */
+    --font-hand: var(--font-head);
+    --font-mono: var(--font-sig);
+  }
+
+  html,body{margin:0;padding:0;background:#e8e4d9;color:var(--ink);font-family:var(--font-body);line-height:1.65}
+  *{box-sizing:border-box}
+
+  .page{ max-width:640px; margin:40px auto; background:var(--paper); padding:50px 60px; box-shadow:0 4px 30px rgba(0,0,0,.1) }
+
+  /* Typography helpers */
+  .hand{ font-family:var(--font-hand); font-weight:700; line-height:1.15 }
+  .label{ font-family:var(--font-mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted) }
+  .accent{ background:var(--accent); padding:1px 4px }
+  .small{ font-size:13px }
+  .italic{ font-style:italic }
+
+  h1,h2,h3{ margin:0; font-family:var(--font-hand); font-weight:700 }
+
+  /* letterhead */
+  .letterhead{ border-bottom:2px solid var(--ink); padding-bottom:14px; margin-bottom:26px; display:flex; justify-content:space-between; align-items:baseline }
+  .letterhead .brand{ font-family:var(--font-hand); font-size:20px; font-weight:800 }
+
+  /* VSL */
+  .vsl{ background:#0a0a0a; height:280px; border:1.5px dashed #555; display:flex; align-items:center; justify-content:center; position:relative; margin:24px 0 }
+  .vsl .play{ width:60px; height:60px; border-radius:30px; border:3px solid #fff; display:flex; align-items:center; justify-content:center }
+  .vsl .play::after{ content:''; width:0; height:0; border-left:18px solid #fff; border-top:11px solid transparent; border-bottom:11px solid transparent; margin-left:5px }
+  .vsl .meta{ position:absolute; top:12px; left:14px; font-family:var(--font-mono); font-size:11px; color:#fff; opacity:.6 }
+
+  /* buttons */
+  .btn{ display:block; width:100%; text-align:center; background:var(--accent); border:2px solid var(--ink); padding:18px 20px; font-family:var(--font-hand); font-weight:800; font-size:22px; box-shadow:5px 5px 0 var(--ink); cursor:pointer; color:var(--ink); text-decoration:none; margin:10px 0 }
+  .btn:hover{ transform:translate(2px,2px); box-shadow:3px 3px 0 var(--ink) }
+
+  /* callouts */
+  .hard-truth{ background:var(--ink); color:#f5f3ed; padding:24px; margin:24px 0 }
+  .hard-truth .label{ color:var(--accent) }
+  .hard-truth h2{ color:#f5f3ed; font-size:24px; margin:8px 0 8px }
+  .hard-truth p{ color:#bbb6a8; margin:0 }
+
+  .pullquote{ border-left:4px solid var(--ink); padding:14px 0 14px 20px; margin:12px 0; font-style:italic; background:rgba(0,0,0,.02) }
+
+  .bonus-card{ background:#fff; border:2px solid var(--ink); box-shadow:5px 5px 0 var(--ink); padding:22px; margin:28px 0; transform:rotate(-.4deg) }
+  .bonus-card h3{ font-size:22px; margin-bottom:12px }
+  .bonus-card ul{ list-style:none; padding:0; margin:0 }
+  .bonus-card li{ padding:10px 0; border-bottom:1px dashed #ccc }
+  .bonus-card li:last-child{ border:none }
+
+  /* ORDER FORM */
+  .order{ background:#fff; border:2px solid var(--ink); box-shadow:6px 6px 0 var(--ink); margin:30px 0 }
+  .order .step-head{ background:var(--ink); color:#f5f3ed; padding:14px 18px; display:flex; align-items:center; gap:12px; font-family:var(--font-hand); font-size:20px; font-weight:700 }
+  .order .step-head .num{ width:28px; height:28px; border-radius:14px; background:var(--accent); color:var(--ink); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px }
+  .order .step-head .secure{ margin-left:auto; font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:1px }
+  .order .fields{ padding:18px; display:flex; flex-direction:column; gap:12px }
+  .order .field label{ display:block; font-family:var(--font-mono); font-size:11px; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:4px }
+  .order .field input{ width:100%; border:2px solid var(--ink); padding:12px 14px; font-family:var(--font-body); font-size:15px; background:#fff }
+  .order .field input:focus{ outline:none; background:#fffde7 }
+  .order .row{ display:flex; gap:12px }
+  .order .row .field{ flex:1 }
+
+  /* ORDER BUMPS */
+  .bump{ border:2px dashed var(--ink); padding:16px; margin:12px 0; background:rgba(0,0,0,.02); position:relative }
+  .bump.featured{ border-color:#c0392b; background:#fff8e1 }
+  .bump .badge{ position:absolute; top:-11px; left:16px; background:#c0392b; color:#fff; padding:3px 10px; font-family:var(--font-mono); font-size:10px; letter-spacing:1px }
+  .bump-row{ display:flex; gap:12px; align-items:flex-start }
+  .bump-row input[type=checkbox]{ width:24px; height:24px; border:2px solid var(--ink); margin-top:2px; flex-shrink:0; accent-color:var(--accent) }
+  .bump-row .t{ font-family:var(--font-hand); font-size:18px; font-weight:700 }
+  .bump-row .d{ margin-top:8px; font-size:14px; line-height:1.55 }
+  .bump-row .proof{ margin-top:8px; font-family:var(--font-mono); font-size:11px; color:#c0392b; letter-spacing:.5px }
+
+  .summary{ padding:18px; background:rgba(0,0,0,.04); border-top:1.5px dashed var(--ink) }
+  .summary .row{ display:flex; justify-content:space-between; padding:4px 0 }
+  .summary .total{ border-top:2px solid var(--ink); padding-top:10px; margin-top:10px; font-family:var(--font-hand); font-size:22px; font-weight:800 }
+
+  /* GUARANTEE SEAL */
+  .seal-wrap{ margin:24px 0; padding:20px; border:2px solid var(--ink); display:flex; gap:18px; align-items:center; background:#fff }
+  .seal{ width:110px; height:110px; flex-shrink:0; position:relative; display:flex; align-items:center; justify-content:center }
+  .seal svg{ position:absolute; inset:0 }
+  .seal .t1{ font-family:var(--font-hand); font-weight:800; font-size:22px; line-height:1 }
+  .seal .t2{ font-family:var(--font-mono); font-size:9px; letter-spacing:.8px; margin-top:3px }
+
+  /* FAQ, PS */
+  .faq-q{ padding:14px 0; border-bottom:1px solid #ccc; font-weight:700; cursor:pointer }
+  .ps{ margin-top:20px; padding:16px; background:rgba(0,0,0,.04); border-left:4px solid var(--ink) }
+  .ps + .ps{ margin-top:10px }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: LETTERHEAD
+       ════════════════════════════════════════════════════════ -->
+  <div class="letterhead">
+    <div class="brand">— จดหมายเปิดผนึก —</div>
+    <div class="label">Bangkok · เม.ย. 2026</div>
+  </div>
+
+  <!-- EDIT: EYEBROW (pre-headline) -->
+  <div class="label" style="text-align:center; display:block; margin-bottom:12px">
+    จากโต๊ะทำงานของอดีต SoloPreneur ที่สร้างรายได้หลักล้านมามากกว่า 10 ปี
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: HEADLINE  (อันนี้สำคัญสุด! 80% ของ conversion)
+       Tip: ใส่ number + audience + timeline
+       ════════════════════════════════════════════════════════ -->
+  <h1 style="font-size:38px; text-align:center; margin-bottom:10px; line-height:1.2">
+    "ถ้าผมต้องสร้าง<span class="accent">บริษัท 100 ล้าน</span><br>
+    จาก 0... AI จะเป็นประตูบานแรกที่ผมจะเปิด..."
+  </h1>
+
+  <!-- EDIT: SUBHEADLINE -->
+  <p style="text-align:center; font-size:17px; font-style:italic; opacity:.75; margin:0 0 10px">
+    …นี่คือ<u>Playbookเดียว</u>ที่ผมจะใช้ และวันนี้ผมให้คุณฟรี
+  </p>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: VSL (video placeholder)
+       ใส่ <video> หรือ <iframe src="..."> แทน .vsl div ได้เลย
+       ════════════════════════════════════════════════════════ -->
+  <div class="vsl">
+    <div class="meta">วิดีโอแนะนำ · 00:00 / 27:14</div>
+    <div class="play"></div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: LETTER BODY (เนื้อจดหมาย)
+       ════════════════════════════════════════════════════════ -->
+  <p class="hand" style="font-size:24px; margin:20px 0 10px">ถึงเพื่อนผู้ก่อตั้งทุกท่าน,</p>
+
+  <p>ขอเริ่มด้วยคำสารภาพนะครับ <span class="accent">เมื่อ 5 ปีก่อน ผมเลือกเดินถอยหลังให้กับ Solopreneur</span>
+  ที่ผมทุ่มเวลาไปมากกว่า 10 ปี ทั้งๆ ที่มันคือแนวทางที่สร้างรายได้หลักล้านให้ผมมามากกว่า 10 ปี ผมเลือกที่จะถอยหลังให้กับมัน และสร้างบางสิ่งบางอย่างใหม่</p>
+
+  <p>แล้วผมก็ค้นพบบางอย่าง — ไม่ใช่ "ทริก" ไม่ใช่ "เคล็ดลับ" แต่เป็น<strong>ระบบ</strong>
+  วิธีผสม AI เข้ากับ framework ด้าน product-market ที่เฉพาะเจาะจง และมันได้เปลี่ยนทุกอย่างไปตลอดกาล</p>
+
+  <!-- EDIT: PULL QUOTE -->
+  <div class="pullquote">
+    "ภายใน 14 เดือน ผมสามารถขยายสาขาธุรกิจไปมากกว่า 5 จังหวัด และสร้าง Valuation มากกว่า 100 ล้าน และเมื่อระบบที่ผมสร้างทำงานได้อย่างสมบูรณ์ในสาขาใหม่ สร้างยอดขาย 25 ล้านใน Q1
+    — โดยที่ผมมีแผนการระดมทุน <strong>ที่ทำให้นักลงทุนต้องวิ่งเข้าหาคุณเอง"</strong>
+  </div>
+
+  <p>คุณอาจจะสงสัยว่า: <em>มันเป็นไปได้จริงสำหรับผมเหรอ?</em></p>
+  <p>คำตอบสั้นๆ คือ <strong>ใช่ครับ</strong> — แต่ไม่ใช่ถ้าคุณยังทำแบบเดิมที่ทำอยู่</p>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: PROBLEM CALLOUT (dark section)
+       ════════════════════════════════════════════════════════ -->
+  <div class="hard-truth">
+    <div class="label">ความจริงที่ไม่มีใครบอก</div>
+    <h2>99.4% ของผู้ประกอบการไทย จะไม่มีวันทะลุ ฿10 ล้าน</h2>
+    <p>ไม่ใช่เพราะขี้เกียจ ไม่ใช่เพราะไม่เก่ง แต่เพราะไม่เคยมีใครสอน
+    <em>ระบบ</em> ที่ Top 0.6% เขาใช้กัน</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: BULLETS ("fascinations")
+       Tip: [Specific thing] + [Surprising twist] + [Emotional payoff]
+       ════════════════════════════════════════════════════════ -->
+  <p>นี่คือสิ่งที่คุณจะได้ค้นพบใน <strong>AI ฿100M Blueprint</strong>:</p>
+  <ul style="padding-left:22px; line-height:1.95">
+    <li>"Wedge Method" — วิธีหาตลาดพันล้านที่ไม่มีใครมองเห็น…</li>
+    <li>SuperB Prompts ที่ผมใช้โคลนระบบการทำงานของบริษัทด้วย AI…</li>
+    <li>ทำไมหลายคนหลงทางกับการเรียนรู้เครื่องมือ AI (และตัวธุรกิจจริงที่สร้าง valuation)…</li>
+    <li>วิธีวางโครงสร้างบริษัทให้ VC ต้องวิ่งเข้าหาคุณเอง…</li>
+    <li>"Valuation Sprint" 90 วัน ที่ผมรันทุกไตรมาส…</li>
+    <li>"Pitch Deck" ที่ควรจะเป็น และนักลุงทุนไม่วิ่งหนีคุณไปตั้งแต่อ้าปากพูดคำแรก…</li>
+    <li>"AI Agent Starter Kit" ที่ผ่านการลองผิดลองถูกแล้วสร้างขึ้นมา…</li>
+  </ul>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: BONUSES
+       ════════════════════════════════════════════════════════ -->
+  <div class="bonus-card">
+    <h3>+ โบนัสพิเศษ 5 ชิ้น มูลค่า <span class="accent">฿72,400</span></h3>
+    <ul>
+      <li>① ClaudeCode Simple is perfect (฿9,900)</li>
+      <li>② Sale page Prompt ที่สร้าง Conversion ได้จริง คุณแค่ Copy แล้ววาง (฿6,500)</li>
+      <li>③ Live Q&amp;A สด 12 สัปดาห์ (฿19,000)</li>
+      <li>④ กลุ่มปิด Founder Circle (฿12,000)</li>
+      <li>⑤ Call 1:1 วางกลยุทธ์กับผมโดยตรง (฿25,000)</li>
+    </ul>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: SIGN-OFF
+       ════════════════════════════════════════════════════════ -->
+  <p>เอาจริงๆ — ผมบังคับให้คุณกดปุ่มข้างล่างไม่ได้หรอกครับ</p>
+  <p>แต่ผม<em>บอกได้อย่างเดียว</em>ว่า ทุกวันที่คุณรอ คือวันที่คู่แข่งของคุณ
+  กำลังไปไกลขึ้นด้วย AI ในขณะที่คุณยัง "คิดดูก่อน"</p>
+  <p style="margin-top:24px">แล้วเจอกันครับ,</p>
+  <div style="font-family:var(--font-sig); font-size:30px; font-weight:600; letter-spacing:.5px; transform:rotate(-3deg); margin-top:4px">
+    ~ Mentor ของคุณในวันข้างหน้า
+  </div>
+  <div class="label" style="margin-top:4px">ผู้ก่อตั้ง · AI-100M BLUEPRINT</div>
+
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: ORDER FORM  (2-step + order bumps)
+       ════════════════════════════════════════════════════════ -->
+  <div class="order">
+
+    <div class="step-head">
+      <div class="num">1</div>
+      <div>ข้อมูลติดต่อ · Contact</div>
+      <div class="secure">🔒 ปลอดภัย</div>
+    </div>
+    <div class="fields">
+      <div class="field"><label>ชื่อ-นามสกุล · FULL NAME</label><input placeholder="สมชาย ใจดี"></div>
+      <div class="field"><label>อีเมล · EMAIL</label><input placeholder="founder@company.co.th"></div>
+      <div class="field"><label>เบอร์โทร (ไม่บังคับ) · PHONE</label><input placeholder="08 1234 5678"></div>
+    </div>
+
+    <div class="step-head">
+      <div class="num">2</div>
+      <div>ข้อมูลการชำระเงิน · Payment</div>
+    </div>
+    <div class="fields">
+      <div class="field"><label>หมายเลขบัตร · CARD NUMBER</label><input placeholder="4242 4242 4242 4242"></div>
+      <div class="row">
+        <div class="field"><label>วันหมดอายุ · EXP.</label><input placeholder="MM / YY"></div>
+        <div class="field"><label>CVV</label><input placeholder="•••"></div>
+      </div>
+    </div>
+
+    <!-- EDIT: ORDER BUMPS -->
+    <div style="padding:10px 18px 18px">
+      <div class="label" style="text-align:center; display:block; margin-bottom:12px; color:#c0392b">
+        ★ เดี๋ยวก่อน! ข้อเสนอพิเศษครั้งเดียว — เพิ่มเข้าออเดอร์เลย ★
+      </div>
+
+      <!-- Bump #1 — most popular (default checked) -->
+      <div class="bump featured">
+        <div class="badge">ยอดนิยม · TOP PICK</div>
+        <div class="bump-row">
+          <input type="checkbox" checked>
+          <div>
+            <div class="t">ใช่! เพิ่ม <span class="accent">"The PRESS
+              Method™ Playbook"</span>
+              เพียง <strong>฿1,990</strong>
+              <span style="text-decoration:line-through; opacity:.5; font-size:15px">฿3,900</span>
+            </div>
+            <div class="d">Check list ที่ผมใช้สร้าง Framework ที่ Mobile App ในไทยโตมากกว่า 600% ในเวลาแค่ 2 เดือน กับตลาดที่มีการแข่งขันเข้มข้นที่สุดจนทยานขึ้นไปทำยอดดาวน์โหลดได้อันดับ 1</div>
+            <div class="proof">🔥 87% ของคนซื้อเลือกอันนี้</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bump #2 -->
+      <div class="bump">
+        <div class="bump-row">
+          <input type="checkbox">
+          <div>
+            <div class="t">ใช่! อัปเกรดเป็น <span class="accent">"Done-With-You"</span>
+              เพิ่ม <strong>฿4,900</strong>
+              <span style="text-decoration:line-through; opacity:.5; font-size:15px">฿29,000</span>
+            </div>
+            <div class="d">Group Coaching 6 ครั้ง ที่ผมรีวิว Offer · Funnel · Pitch
+              ของคุณเองโดยตรง และแก้ให้สดๆ ในคลาส</div>
+            <div class="proof" style="color:var(--ink)">👥 รับแค่ 12 คน/รุ่น</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bump #3 -->
+      <!-- <div class="bump">
+        <div class="bump-row">
+          <input type="checkbox">
+          <div>
+            <div class="t">ใช่! เพิ่ม <span class="accent">"AI Agent Starter Kit"</span>
+              เพียง <strong>฿990</strong>
+              <span style="text-decoration:line-through; opacity:.5; font-size:15px">฿6,900</span>
+            </div>
+            <div class="d">12 Template AI Agent พร้อมใช้ (ขาย · Ops · คอนเทนต์)
+              Deploy ได้ใน 10 นาที ประหยัดเวลา 40+ ชม./สัปดาห์</div>
+            <div class="proof" style="color:var(--ink)">⚡ Deploy ได้ใน 10 นาที</div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- EDIT: ORDER SUMMARY -->
+    <div class="summary">
+      <div class="label" style="margin-bottom:8px">สรุปคำสั่งซื้อ · YOUR ORDER</div>
+      <div class="row"><span>AI ฿100M Blueprint (หลัก)</span><span>฿19,900</span></div>
+      <div class="row" style="color:#c0392b"><span>+ 100M Founder Vault</span><span>฿1,990</span></div>
+      <div class="row total"><span>ยอดรวมวันนี้</span><span class="accent">฿21,890</span></div>
+    </div>
+
+    <div style="padding:0 18px 20px">
+      <!-- EDIT: MAIN CTA -->
+      <a href="#" class="btn">🔒 ยืนยันคำสั่งซื้อเลย →</a>
+      <div style="text-align:center; margin-top:10px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap">
+        <span class="label">รับประกัน 30 วัน</span>
+        <span class="label">· SSL SECURED</span>
+        <span class="label">· เข้าใช้ได้ทันที</span>
+      </div>
+      <p class="small italic" style="text-align:center; opacity:.7; margin-top:10px">
+        ชำระครั้งเดียว ฿21,890 ไม่มี subscription ไม่มีค่าใช้จ่ายแอบแฝง
+      </p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: GUARANTEE
+       ════════════════════════════════════════════════════════ -->
+  <div class="seal-wrap">
+    <div class="seal">
+      <svg width="110" height="110" viewBox="0 0 88 88">
+        <path d="M44 4 L52 10 L62 8 L66 16 L76 18 L76 28 L84 34 L80 44 L84 54 L76 60 L76 70 L66 72 L62 80 L52 78 L44 84 L36 78 L26 80 L22 72 L12 70 L12 60 L4 54 L8 44 L4 34 L12 28 L12 18 L22 16 L26 8 L36 10 Z" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="44" cy="44" r="30" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="2 3"/>
+      </svg>
+      <div style="text-align:center; z-index:1">
+        <div class="t1">30 วัน</div>
+        <div class="t2">GUARANTEE</div>
+      </div>
+    </div>
+    <div style="flex:1">
+      <div class="hand" style="font-size:24px">รับประกัน "ไม่ถามสักคำ"</div>
+      <p style="margin:6px 0 0; font-size:14px">ถ้านี่ไม่ใช่ ฿20k ที่คุ้มที่สุดที่คุณเคยจ่าย
+      อีเมลมาหาผมภายใน 30 วัน ผมคืนเงินเต็มจำนวน — และโบนัสทั้งหมดคุณเก็บไว้ได้เลย</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: FAQ
+       ════════════════════════════════════════════════════════ -->
+  <h2 style="font-size:28px; margin:30px 0 14px; text-align:center">คำถามที่คุณอาจสงสัย…</h2>
+  <div class="faq-q">ต้องมีธุรกิจอยู่แล้วไหม? <span style="float:right;opacity:.4">+</span></div>
+  <div class="faq-q">ใช้เวลากี่ชั่วโมงต่อสัปดาห์? <span style="float:right;opacity:.4">+</span></div>
+  <div class="faq-q">นี่เป็นแค่ "คอร์ส AI" ทั่วไปอีกคอร์สหรือเปล่า? <span style="float:right;opacity:.4">+</span></div>
+  <div class="faq-q">ไม่มีพื้น tech เรียนได้ไหม? <span style="float:right;opacity:.4">+</span></div>
+  <div class="faq-q">เมื่อไหร่ถึงจะได้เข้าเรียน? <span style="float:right;opacity:.4">+</span></div>
+
+  <!-- ════════════════════════════════════════════════════════
+       EDIT: P.S. STACK  (อ่านเยอะที่สุดอันดับ 2 รองจาก headline)
+       ════════════════════════════════════════════════════════ -->
+  <div class="ps">
+    <span class="hand" style="font-size:22px">P.S.</span> มีแค่ 47 ที่นั่ง ในราคานี้
+    ถ้าหมดเมื่อไหร่ ราคาจะปรับขึ้นเป็น 2 เท่าทันที
+  </div>
+  <div class="ps">
+    <span class="hand" style="font-size:22px">P.P.S.</span> ยังลังเลอยู่ใช่ไหม? ลองดูวิดีโอด้านบนก่อน
+    ถ้าดูแล้วไม่เปลี่ยนมุมมองที่คุณมีต่อธุรกิจตัวเอง ก็ปิดแท็บไปได้เลยครับ ไม่เสียอะไร
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -5,10 +5,10 @@
 
 set -e
 
-VPS_HOST="207.148.76.203"
-VPS_USER="root"
-VPS_PASSWORD='2(hVW],PciL[,Z2?'
-REPO_URL="https://github.com/PanapatWonganan/brieflylearn.git"
+VPS_HOST="${VPS_HOST:-207.148.76.203}"
+VPS_USER="${VPS_USER:-root}"
+VPS_PASSWORD="${VPS_PASSWORD:-changeme}"
+REPO_URL="${REPO_URL:-https://github.com/PanapatWonganan/brieflylearn.git}"
 APP_DIR="/var/www/brieflylearn"
 
 echo "🚀 Starting deployment to Vultr VPS..."
@@ -41,7 +41,7 @@ DEPLOY_EOF
 )
 
 echo "🔐 Connecting to VPS and deploying..."
-echo "    (You may need to enter password: 2(hVW],PciL[,Z2?)"
+echo "    (You may need to enter password manually or use SSH keys)"
 echo ""
 
 # SSH and execute commands
@@ -53,7 +53,7 @@ echo ""
 echo "🔧 Next steps to complete deployment:"
 echo ""
 echo "1️⃣  SSH to your VPS:"
-echo "    ssh root@207.148.76.203"
+echo "    ssh $VPS_USER@$VPS_HOST"
 echo ""
 echo "2️⃣  Create .env.local file:"
 echo "    cd /var/www/brieflylearn"
@@ -80,4 +80,4 @@ echo "6️⃣  Check status:"
 echo "    pm2 status"
 echo "    pm2 logs brieflylearn"
 echo ""
-echo "🌐 Your app will be available at: http://207.148.76.203"
+echo "🌐 Your app will be available at: http://$VPS_HOST"

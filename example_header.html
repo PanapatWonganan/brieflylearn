@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Asme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          black: '#0E0E0E',
+          white: '#F2F2F0',
+          mint: { DEFAULT: '#00FFBA', dim: '#00C98F', shadow: '#007A5A' },
+          carbon: '#0E0E0E',
+        },
+        fontFamily: {
+          serif: ['"Instrument Serif"', 'serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  :root {
+    --aprl-black: #0E0E0E;
+    --aprl-near-black: #141414;
+    --aprl-dark: #1A1A1A;
+    --aprl-surface: #1E1E1E;
+    --aprl-muted: #2A2A2A;
+    --aprl-mint: #00FFBA;
+    --aprl-mint-dim: #00C98F;
+    --aprl-mint-shadow: #007A5A;
+    --aprl-white: #F2F2F0;
+    --aprl-gray: #888885;
+    --aprl-gray-light: #BBBBB8;
+  }
+  html, body { background: #0E0E0E; }
+  body { font-family: 'Inter', system-ui, sans-serif; color: #F2F2F0; -webkit-font-smoothing: antialiased; }
+  .font-serif { font-family: 'Instrument Serif', serif; }
+
+  .liquid-glass {
+    background: rgba(0, 255, 186, 0.015);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+    box-shadow: inset 0 1px 1px rgba(0, 255, 186, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .liquid-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 255, 186, 0.45) 0%,
+      rgba(0, 255, 186, 0.15) 20%,
+      rgba(0, 255, 186, 0) 40%,
+      rgba(0, 255, 186, 0) 60%,
+      rgba(0, 255, 186, 0.15) 80%,
+      rgba(0, 255, 186, 0.45) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Video placeholder styling */
+  .video-placeholder {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(0,255,186,0.025) 0px,
+        rgba(0,255,186,0.025) 10px,
+        rgba(0,255,186,0.06) 10px,
+        rgba(0,255,186,0.06) 20px
+      ),
+      radial-gradient(ellipse at center, rgba(0,255,186,0.06) 0%, rgba(14,14,14,0) 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .video-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(0,255,186,0.05), transparent 60%);
+    pointer-events: none;
+  }
+  .video-placeholder .ph-label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(0,255,186,0.55);
+    padding: 6px 12px;
+    border: 1px solid rgba(0,255,186,0.2);
+    border-radius: 999px;
+    background: rgba(14,14,14,0.5);
+    z-index: 1;
+  }
+
+  /* Hide scrollbar for a cleaner presentation */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,255,186,0.12); border-radius: 999px; }
+  ::-webkit-scrollbar-track { background: #0E0E0E; }
+</style>
+</head>
+<body style="background:#0E0E0E;">
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/framer-motion@11.11.17/dist/framer-motion.js"></script>
+<script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="env,react">
+const { useRef, useEffect, useState } = React;
+const { motion, useInView } = window.Motion || window.FramerMotion || window.framerMotion || window["framer-motion"] || {};
+// Fallback: framer-motion UMD exposes as `Motion`
+const FM = window.Motion || window.FramerMotion || window.framerMotion;
+const MotionDiv = (FM && FM.motion && FM.motion.div) || ((props) => <div {...props} />);
+const MotionH1 = (FM && FM.motion && FM.motion.h1) || ((props) => <h1 {...props} />);
+const MotionH2 = (FM && FM.motion && FM.motion.h2) || ((props) => <h2 {...props} />);
+const MotionP = (FM && FM.motion && FM.motion.p) || ((props) => <p {...props} />);
+const MotionButton = (FM && FM.motion && FM.motion.button) || ((props) => <button {...props} />);
+const useInViewFM = (FM && FM.useInView) || (() => true);
+
+// --- Icon helpers using lucide ---------------------------------------------
+const Icon = ({ name, size = 20, className = "", strokeWidth = 1.75 }) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    const icons = window.lucide && window.lucide.icons;
+    if (!icons) return;
+    const toPascal = (s) => s.split('-').map(p => p[0].toUpperCase() + p.slice(1)).join('');
+    const def = icons[toPascal(name)] || icons[name];
+    if (!def) return;
+    // def is [tag, attrs, children]
+    ref.current.innerHTML = '';
+    const svg = window.lucide.createElement ? window.lucide.createElement(def) : null;
+    if (svg) {
+      svg.setAttribute('width', size);
+      svg.setAttribute('height', size);
+      svg.setAttribute('stroke-width', strokeWidth);
+      ref.current.appendChild(svg);
+    }
+  }, [name, size, strokeWidth]);
+  return <span ref={ref} className={"inline-flex items-center justify-center " + className} style={{ width: size, height: size }} />;
+};
+
+// Fallback simple SVG icons (in case lucide UMD shape differs)
+const Globe = ({ size = 20, className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+);
+const ArrowRight = ({ size = 20, className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+);
+const ArrowUpRight = ({ size = 20, className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+);
+const Instagram = ({ size = 20, className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+);
+const Twitter = ({ size = 20, className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+);
+
+// --- Placeholder for video ---
+const VideoPlaceholder = ({ label = "video", className = "", style = {} }) => (
+  <div className={"video-placeholder " + className} style={style}>
+    <span className="ph-label">{label}</span>
+  </div>
+);
+
+// --- Hero ------------------------------------------------------------------
+const HeroVideo = () => {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    let raf;
+    const animateOpacity = (from, to, dur = 500) => {
+      cancelAnimationFrame(raf);
+      const start = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / dur);
+        v.style.opacity = String(from + (to - from) * t);
+        if (t < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    };
+    const onCanPlay = () => { v.play().catch(() => {}); animateOpacity(0, 1); };
+    const onTimeUpdate = () => {
+      if (v.duration && v.duration - v.currentTime <= 0.55) {
+        const cur = parseFloat(v.style.opacity || '1');
+        if (cur > 0.95) animateOpacity(cur, 0);
+      }
+    };
+    const onEnded = () => {
+      v.style.opacity = '0';
+      setTimeout(() => { v.currentTime = 0; v.play().catch(() => {}); animateOpacity(0, 1); }, 100);
+    };
+    v.addEventListener('canplay', onCanPlay);
+    v.addEventListener('timeupdate', onTimeUpdate);
+    v.addEventListener('ended', onEnded);
+    return () => {
+      cancelAnimationFrame(raf);
+      v.removeEventListener('canplay', onCanPlay);
+      v.removeEventListener('timeupdate', onTimeUpdate);
+      v.removeEventListener('ended', onEnded);
+    };
+  }, []);
+  return (
+    <video
+      ref={ref}
+      className="absolute inset-0 w-full h-full object-cover object-bottom"
+      style={{ opacity: 0 }}
+      muted
+      autoPlay
+      playsInline
+      preload="auto"
+      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4"
+    />
+  );
+};
+
+const Hero = () => {
+  return (
+    <section className="min-h-screen overflow-hidden relative flex flex-col" style={{ background: '#0E0E0E' }}>
+      {/* Background video */}
+      <div className="absolute inset-0 w-full h-full">
+        <HeroVideo />
+        {/* vignette to keep UI readable */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70 pointer-events-none" />
+      </div>
+
+      {/* Navbar */}
+      <div className="relative z-20 px-6 py-6">
+        <nav className="liquid-glass rounded-full max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="flex items-center gap-2">
+              <Globe size={24} className="text-white" />
+              <span className="text-white font-semibold text-lg">Asme</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8 ml-8">
+              <a className="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Features</a>
+              <a className="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Pricing</a>
+              <a className="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">About</a>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="text-white text-sm font-medium px-3 py-2">Sign Up</button>
+            <button className="liquid-glass rounded-full px-6 py-2 text-white text-sm font-medium">Login</button>
+          </div>
+        </nav>
+      </div>
+
+      {/* Hero content */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12 text-center" style={{ transform: 'translateY(-20%)' }}>
+        <h1 className="font-serif text-7xl md:text-8xl lg:text-9xl text-white tracking-tight whitespace-nowrap">
+          Know it <em className="italic">all</em>.
+        </h1>
+
+        <div className="max-w-xl w-full mt-10">
+          <div className="liquid-glass rounded-full pl-6 pr-2 py-2 flex items-center gap-3">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 bg-transparent outline-none text-white placeholder:text-white/40 text-sm py-2"
+            />
+            <button className="rounded-full p-3 transition-colors hover:opacity-90" style={{ background: '#00FFBA', color: '#0E0E0E' }} aria-label="Submit">
+              <ArrowRight size={20} />
+            </button>
+          </div>
+        </div>
+
+        <p className="text-white text-sm leading-relaxed px-4 mt-6 max-w-xl">
+          Stay updated with the latest news and insights. Subscribe to our newsletter today and never miss out on exciting updates.
+        </p>
+
+        <button className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:bg-white/5 transition-colors mt-8">
+          Manifesto
+        </button>
+      </div>
+
+      {/* Social icons */}
+      <div className="relative z-10 flex justify-center gap-4 pb-12">
+        <button className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all" aria-label="Instagram">
+          <Instagram size={20} />
+        </button>
+        <button className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all" aria-label="Twitter">
+          <Twitter size={20} />
+        </button>
+        <button className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all" aria-label="Website">
+          <Globe size={20} />
+        </button>
+      </div>
+    </section>
+  );
+};
+
+// --- About -----------------------------------------------------------------
+const AboutSection = () => {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } });
+    }, { rootMargin: '-100px' });
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  const base = { transition: 'opacity 0.8s ease, transform 0.8s ease' };
+  return (
+    <section
+      ref={ref}
+      className="bg-black pt-32 md:pt-44 pb-10 md:pb-14 px-6 overflow-hidden relative"
+      style={{ background: 'radial-gradient(ellipse at top, rgba(0,255,186,0.04) 0%, transparent 70%), #0E0E0E' }}
+    >
+      <div className="max-w-6xl mx-auto">
+        <div
+          className="text-white/40 text-sm tracking-widest uppercase mb-8"
+          style={{ ...base, transitionDuration: '0.6s', opacity: inView ? 1 : 0, transform: inView ? 'translateY(0)' : 'translateY(20px)' }}
+        >
+          About Us
+        </div>
+        <h2
+          className="font-serif text-4xl md:text-6xl lg:text-7xl text-white leading-[1.1] tracking-tight"
+          style={{ ...base, transitionDelay: '0.1s', opacity: inView ? 1 : 0, transform: inView ? 'translateY(0)' : 'translateY(40px)' }}
+        >
+          <span className="block">Pioneering <em className="italic text-white/60">ideas</em> for</span>
+          <span className="block"><em className="italic text-white/60">minds that create, build, and inspire.</em></span>
+        </h2>
+      </div>
+    </section>
+  );
+};
+
+// --- Reveal (IntersectionObserver + CSS) -----------------------------------
+const useReveal = (margin = '-100px') => {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } });
+    }, { rootMargin: margin });
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [margin]);
+  return [ref, inView];
+};
+
+const revealStyle = (inView, { y = 0, x = 0, duration = 0.8, delay = 0 } = {}) => ({
+  opacity: inView ? 1 : 0,
+  transform: inView ? 'translate3d(0,0,0)' : `translate3d(${x}px, ${y}px, 0)`,
+  transition: `opacity ${duration}s ease ${delay}s, transform ${duration}s ease ${delay}s`,
+  willChange: 'opacity, transform',
+});
+
+// --- Featured video --------------------------------------------------------
+const FeaturedVideoSection = () => {
+  const [ref, inView] = useReveal();
+  return (
+    <section ref={ref} className="bg-black pt-6 md:pt-10 pb-20 md:pb-32 px-6 overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        <div
+          className="relative rounded-3xl overflow-hidden aspect-video"
+          style={revealStyle(inView, { y: 60, duration: 0.9 })}
+        >
+          <VideoPlaceholder label="featured video" className="absolute inset-0" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div className="liquid-glass rounded-2xl p-6 md:p-8 max-w-md">
+              <div className="text-white/50 text-xs tracking-widest uppercase mb-3">Our Approach</div>
+              <p className="text-white text-sm md:text-base leading-relaxed">
+                We believe in the power of curiosity-driven exploration. Every project starts with a question, and every answer opens a new door to innovation.
+              </p>
+            </div>
+            <button
+              className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium self-start md:self-end transition-transform hover:scale-105 active:scale-95"
+            >
+              Explore more
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// --- Philosophy ------------------------------------------------------------
+const PhilosophySection = () => {
+  const [ref, inView] = useReveal();
+  return (
+    <section ref={ref} className="bg-black py-28 md:py-40 px-6 overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        <h2
+          className="font-serif text-5xl md:text-7xl lg:text-8xl text-white tracking-tight mb-16 md:mb-24"
+          style={revealStyle(inView, { y: 40, duration: 0.8 })}
+        >
+          <span>Innovation <em className="italic text-white/40">x</em> Vision</span>
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div
+            className="rounded-3xl overflow-hidden aspect-[4/3] relative"
+            style={revealStyle(inView, { x: -40, duration: 0.9 })}
+          >
+            <VideoPlaceholder label="philosophy video" className="absolute inset-0" />
+          </div>
+
+          <div
+            className="flex flex-col"
+            style={revealStyle(inView, { x: 40, duration: 0.9 })}
+          >
+            <div className="pb-10">
+              <div className="text-white/40 text-xs tracking-widest uppercase mb-4">Choose your space</div>
+              <p className="text-white/70 text-base md:text-lg leading-relaxed">
+                Every meaningful breakthrough begins at the intersection of disciplined strategy and remarkable creative vision. We operate at that crossroads, turning bold thinking into tangible outcomes that move people and reshape industries.
+              </p>
+            </div>
+            <div className="w-full h-px bg-white/10" />
+            <div className="pt-10">
+              <div className="text-white/40 text-xs tracking-widest uppercase mb-4">Shape the future</div>
+              <p className="text-white/70 text-base md:text-lg leading-relaxed">
+                We believe that the best work emerges when curiosity meets conviction. Our process is designed to uncover hidden opportunities and translate them into experiences that resonate long after the first impression.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// --- Services --------------------------------------------------------------
+const ServiceCard = ({ tag, title, desc, label, delay = 0, inView }) => (
+  <div
+    className="liquid-glass rounded-3xl overflow-hidden group"
+    style={revealStyle(inView, { y: 50, duration: 0.8, delay })}
+  >
+    <div className="aspect-video relative overflow-hidden">
+      <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+        <VideoPlaceholder label={label} className="w-full h-full" />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+    </div>
+    <div className="p-6 md:p-8">
+      <div className="flex items-start justify-between mb-4">
+        <span className="text-white/40 text-xs tracking-widest uppercase">{tag}</span>
+        <div className="liquid-glass rounded-full p-2 text-white">
+          <ArrowUpRight size={18} />
+        </div>
+      </div>
+      <h3 className="font-serif text-white text-xl md:text-2xl mb-3 tracking-tight">{title}</h3>
+      <p className="text-white/50 text-sm leading-relaxed">{desc}</p>
+    </div>
+  </div>
+);
+
+const ServicesSection = () => {
+  const [ref, inView] = useReveal();
+  return (
+    <section
+      ref={ref}
+      className="bg-black py-28 md:py-40 px-6 overflow-hidden"
+      style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, transparent 60%), #000' }}
+    >
+      <div className="max-w-6xl mx-auto">
+        <div
+          className="flex items-end justify-between mb-12 md:mb-16"
+          style={revealStyle(inView, { y: 30, duration: 0.7 })}
+        >
+          <h2 className="font-serif text-3xl md:text-5xl text-white tracking-tight">What we do</h2>
+          <div className="text-white/40 text-sm hidden md:block tracking-widest uppercase">Our services</div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          <ServiceCard
+            tag="Strategy"
+            title="Research & Insight"
+            desc="We dig deep into data, culture, and human behavior to surface the insights that drive meaningful, lasting change."
+            label="strategy video"
+            delay={0}
+            inView={inView}
+          />
+          <ServiceCard
+            tag="Craft"
+            title="Design & Execution"
+            desc="From concept to launch, we obsess over every detail to deliver experiences that feel effortless and look extraordinary."
+            label="craft video"
+            delay={0.15}
+            inView={inView}
+          />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// --- App -------------------------------------------------------------------
+const App = () => (
+  <div className="bg-black">
+    <Hero />
+    <AboutSection />
+    <FeaturedVideoSection />
+    <PhilosophySection />
+    <ServicesSection />
+    <footer className="bg-black py-16 px-6 border-t border-white/5">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex items-center gap-2">
+          <Globe size={20} className="text-white" />
+          <span className="text-white font-semibold">Asme</span>
+        </div>
+        <div className="text-white/40 text-sm">© 2026 Asme. All rights reserved.</div>
+      </div>
+    </footer>
+  </div>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

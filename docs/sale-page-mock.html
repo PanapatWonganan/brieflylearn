@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mock — Long-form Sale Page (All Light Theme)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Trirong:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    /* Warm Minimalism — All Light */
+    --sand-50: #fdfcfa;
+    --sand-100: #f9f6f0;
+    --sand-200: #f2ede3;
+    --sand-300: #e8e1d1;
+    --sand-400: #d7cdb6;
+    --sand-border: #e8e4dc;
+
+    --ink: #1a1a1a;
+    --ink-light: #4a4a4a;
+    --ink-muted: #8a8a8a;
+    --ink-faint: #c5c5c5;
+
+    --brand: #4a7a5a;
+    --brand-dark: #2f5440;
+    --brand-light: #e8f0ea;
+    --brand-pale: #f3f7f3;
+
+    --cta: #FF6B35;
+    --cta-dark: #E85A2A;
+    --urgency: #9b4d4d;
+
+    --shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.04);
+    --shadow-md: 0 4px 12px rgba(26, 26, 26, 0.06);
+    --shadow-lg: 0 12px 32px rgba(26, 26, 26, 0.08);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'IBM Plex Sans Thai', 'DM Sans', -apple-system, sans-serif;
+    background: var(--sand-50);
+    color: var(--ink);
+    line-height: 1.65;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .serif { font-family: 'Trirong', 'Cormorant Garamond', serif; }
+  .mono { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .container-sm { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 96px 0; position: relative; }
+  section.alt { background: var(--sand-100); }
+  section.cream { background: var(--sand-200); }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--brand);
+    margin-bottom: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .section-label::before { content: ''; width: 24px; height: 1px; background: var(--brand); }
+
+  h1, h2, h3, h4 { font-family: 'Trirong', serif; font-weight: 500; letter-spacing: -0.01em; }
+  h1 { font-size: clamp(36px, 5vw, 60px); line-height: 1.1; }
+  h2 { font-size: clamp(28px, 3.6vw, 44px); line-height: 1.2; margin-bottom: 24px; }
+  h3 { font-size: clamp(20px, 2vw, 26px); line-height: 1.3; margin-bottom: 12px; }
+  p { color: var(--ink-light); font-size: 17px; line-height: 1.75; }
+  p.lead { font-size: 20px; color: var(--ink); line-height: 1.6; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 16px 32px; border-radius: var(--radius-sm);
+    font-weight: 600; font-size: 16px; cursor: pointer; border: none;
+    transition: all 0.2s ease; text-decoration: none; font-family: inherit;
+  }
+  .btn-cta { background: var(--cta); color: #fff; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25); }
+  .btn-cta:hover { background: var(--cta-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(255, 107, 53, 0.35); }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #000; }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--sand-border); }
+  .btn-ghost:hover { background: var(--sand-100); border-color: var(--ink-muted); }
+  .btn-lg { padding: 18px 40px; font-size: 17px; }
+
+  /* Sticky Price Header */
+  .sticky-header {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(253, 252, 250, 0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--sand-border); z-index: 100; padding: 14px 0;
+  }
+  .sticky-header .inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .sticky-header .price-info { display: flex; align-items: center; gap: 14px; }
+  .sticky-header .price { font-size: 22px; font-weight: 700; color: var(--ink); }
+  .sticky-header .old-price { font-size: 14px; color: var(--ink-muted); text-decoration: line-through; }
+  .sticky-header .save-badge { background: var(--brand-light); color: var(--brand-dark); padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+
+  /* 01 Hero */
+  .hero { padding: 180px 0 120px; background: linear-gradient(180deg, var(--sand-50) 0%, var(--sand-100) 100%); position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: 10%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(74, 122, 90, 0.06) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 80px; align-items: center; position: relative; }
+  .hero .pre-headline { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--brand-light); border-radius: 100px; color: var(--brand-dark); font-size: 13px; font-weight: 600; margin-bottom: 24px; }
+  .hero h1 { margin-bottom: 24px; color: var(--ink); }
+  .hero h1 em { font-style: normal; color: var(--brand); }
+  .hero .sub { font-size: 19px; color: var(--ink-light); margin-bottom: 32px; max-width: 560px; }
+  .hero .stats { display: flex; gap: 40px; margin-bottom: 40px; padding: 24px 0; border-top: 1px solid var(--sand-border); border-bottom: 1px solid var(--sand-border); }
+  .hero .stats .stat strong { font-family: 'Trirong', serif; font-size: 32px; font-weight: 600; color: var(--ink); display: block; }
+  .hero .stats .stat span { font-size: 13px; color: var(--ink-muted); letter-spacing: 0.05em; }
+  .hero .cta-group { display: flex; gap: 14px; margin-bottom: 18px; }
+  .hero .guarantee-note { font-size: 13px; color: var(--ink-muted); display: flex; align-items: center; gap: 8px; }
+
+  .hero-image-card { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-lg); position: relative; }
+  .hero-image-card .dashboard-mock { background: var(--sand-100); border-radius: var(--radius-md); padding: 24px; margin-bottom: 16px; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; color: var(--ink-muted); border: 1px solid var(--sand-border); }
+  .hero-image-card .badge-float { position: absolute; top: -14px; right: 24px; background: var(--cta); color: #fff; padding: 8px 16px; border-radius: 100px; font-size: 12px; font-weight: 700; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3); }
+
+  /* 02 Trust Strip */
+  .trust-strip { padding: 40px 0; background: var(--sand-100); border-top: 1px solid var(--sand-border); border-bottom: 1px solid var(--sand-border); }
+  .trust-strip .label { text-align: center; color: var(--ink-muted); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; }
+  .trust-logos { display: flex; justify-content: center; align-items: center; gap: 60px; flex-wrap: wrap; opacity: 0.55; }
+  .trust-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--ink-light); font-weight: 500; }
+
+  /* 03 Case Strip */
+  .case-strip { padding: 80px 0; background: #fff; border-bottom: 1px solid var(--sand-border); }
+  .case-strip h2 { text-align: center; font-size: 28px; margin-bottom: 48px; }
+  .case-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .case-mini { text-align: center; padding: 28px 20px; background: var(--sand-50); border: 1px solid var(--sand-border); border-radius: var(--radius-md); transition: all 0.2s; }
+  .case-mini:hover { border-color: var(--brand); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .case-mini .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--brand-light); margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; color: var(--brand-dark); font-weight: 700; font-size: 18px; }
+  .case-mini strong { display: block; font-family: 'Trirong', serif; font-size: 22px; color: var(--brand-dark); margin-bottom: 4px; }
+  .case-mini .metric { font-size: 13px; color: var(--ink-muted); margin-bottom: 10px; }
+  .case-mini .name { font-size: 13px; color: var(--ink); font-weight: 500; }
+  .case-mini .name span { color: var(--ink-muted); font-weight: 400; font-size: 12px; }
+
+  /* 04 Pain Points */
+  .pain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 48px; }
+  .pain-card { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-md); padding: 28px; transition: all 0.2s; }
+  .pain-card:hover { border-color: var(--ink-muted); box-shadow: var(--shadow-md); }
+  .pain-card .icon { width: 40px; height: 40px; border-radius: 8px; background: var(--sand-100); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; }
+  .pain-card h3 { color: var(--ink); font-size: 18px; margin-bottom: 8px; }
+  .pain-card p { font-size: 15px; }
+
+  /* 05 Why Fail */
+  .why-fail { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
+  .why-card { padding: 32px; background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-md); position: relative; }
+  .why-card .number { font-family: 'Cormorant Garamond', serif; font-size: 52px; color: var(--brand); line-height: 1; margin-bottom: 16px; font-weight: 500; }
+  .why-card h3 { color: var(--ink); font-size: 19px; margin-bottom: 10px; }
+  .why-card p { font-size: 15px; }
+
+  /* 06 Framework */
+  .framework-hero { text-align: center; max-width: 680px; margin: 0 auto 48px; }
+  .framework-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 48px; position: relative; }
+  .framework-step { text-align: center; padding: 32px 20px; background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-md); position: relative; }
+  .framework-step .step-num { width: 44px; height: 44px; border-radius: 50%; background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 16px; font-size: 17px; }
+  .framework-step h4 { color: var(--ink); font-size: 16px; margin-bottom: 6px; }
+  .framework-step p { font-size: 13px; line-height: 1.5; }
+
+  /* 07 / 10 Featured Case */
+  .featured-case { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-lg); padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; box-shadow: var(--shadow-md); }
+  .case-photo { aspect-ratio: 1; background: linear-gradient(135deg, var(--brand-light), var(--sand-200)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--brand-dark); font-family: 'Trirong', serif; font-size: 18px; }
+  .case-content .case-label { color: var(--cta); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .case-content h3 { font-size: 28px; margin-bottom: 16px; color: var(--ink); }
+  .case-quote { font-family: 'Trirong', serif; font-size: 19px; line-height: 1.6; color: var(--ink); padding: 20px 0 20px 24px; border-left: 3px solid var(--brand); margin: 20px 0; font-style: italic; }
+  .case-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--sand-border); }
+  .case-metrics .m strong { display: block; font-family: 'Trirong', serif; font-size: 26px; color: var(--brand-dark); }
+  .case-metrics .m span { font-size: 12px; color: var(--ink-muted); }
+  .case-byline { font-size: 14px; color: var(--ink-muted); margin-top: 20px; }
+  .case-byline strong { color: var(--ink); font-weight: 600; }
+
+  /* 08 Benefits */
+  .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .benefit-card { padding: 32px 28px; background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-md); transition: all 0.2s; }
+  .benefit-card:hover { border-color: var(--brand); transform: translateY(-2px); }
+  .benefit-card .icon { width: 48px; height: 48px; border-radius: 10px; background: var(--brand-light); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
+  .benefit-card h3 { color: var(--ink); font-size: 19px; margin-bottom: 10px; }
+  .benefit-card p { font-size: 15px; }
+
+  /* 09 Curriculum */
+  .curriculum-list { display: flex; flex-direction: column; gap: 12px; margin-top: 48px; max-width: 820px; margin-left: auto; margin-right: auto; }
+  .lesson { display: flex; gap: 20px; padding: 24px 28px; background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-md); transition: all 0.2s; }
+  .lesson:hover { border-color: var(--brand); box-shadow: var(--shadow-sm); }
+  .lesson .num { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-family: 'Trirong', serif; }
+  .lesson .body h4 { font-size: 17px; color: var(--ink); margin-bottom: 4px; font-family: 'IBM Plex Sans Thai', sans-serif; font-weight: 600; }
+  .lesson .body p { font-size: 14px; color: var(--ink-muted); }
+  .lesson .meta { margin-left: auto; text-align: right; font-size: 13px; color: var(--ink-muted); white-space: nowrap; }
+
+  /* 11 Testimonial Wall */
+  .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+  .testimonial-card { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-md); padding: 28px; }
+  .testimonial-card .stars { color: var(--cta); margin-bottom: 14px; letter-spacing: 2px; }
+  .testimonial-card .quote { font-size: 15px; line-height: 1.65; color: var(--ink); margin-bottom: 20px; }
+  .testimonial-card .author { display: flex; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid var(--sand-border); }
+  .testimonial-card .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+  .testimonial-card .author strong { display: block; font-size: 14px; color: var(--ink); }
+  .testimonial-card .author span { font-size: 12px; color: var(--ink-muted); }
+
+  /* 12 Instructor */
+  .instructor { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-lg); padding: 56px; display: grid; grid-template-columns: 280px 1fr; gap: 56px; align-items: start; box-shadow: var(--shadow-md); }
+  .instructor .photo { aspect-ratio: 1; background: linear-gradient(135deg, var(--brand-light), var(--sand-300)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--brand-dark); font-family: 'Trirong', serif; }
+  .instructor h2 { margin-bottom: 8px; }
+  .instructor .title { color: var(--brand); font-size: 15px; margin-bottom: 20px; font-weight: 600; }
+  .instructor-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--sand-border); }
+  .instructor-stats .s strong { display: block; font-family: 'Trirong', serif; font-size: 22px; color: var(--ink); }
+  .instructor-stats .s span { font-size: 12px; color: var(--ink-muted); }
+
+  /* 13 Comparison */
+  .compare-table { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-md); overflow: hidden; margin-top: 48px; box-shadow: var(--shadow-md); }
+  .compare-table table { width: 100%; border-collapse: collapse; }
+  .compare-table th, .compare-table td { padding: 18px 20px; text-align: left; border-bottom: 1px solid var(--sand-border); font-size: 15px; }
+  .compare-table th { background: var(--sand-100); font-weight: 600; color: var(--ink); font-size: 14px; }
+  .compare-table td:first-child { color: var(--ink); font-weight: 500; }
+  .compare-table .us { color: var(--brand-dark); font-weight: 600; background: var(--brand-pale); }
+  .compare-table .them { color: var(--ink-muted); }
+
+  /* 14 Value Stack */
+  .value-stack { background: var(--brand-pale); border-radius: var(--radius-lg); padding: 56px; max-width: 820px; margin: 48px auto 0; border: 1px solid var(--brand-light); box-shadow: var(--shadow-md); }
+  .value-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed var(--sand-border); color: var(--ink); }
+  .value-item:last-of-type { border-bottom: 2px solid var(--ink); padding-bottom: 20px; }
+  .value-item .name { font-size: 16px; }
+  .value-item .name strong { display: block; margin-bottom: 2px; }
+  .value-item .price { font-family: 'Trirong', serif; font-weight: 600; font-size: 18px; color: var(--ink); white-space: nowrap; }
+  .value-total { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; }
+  .value-total .label { font-size: 15px; color: var(--ink-light); }
+  .value-total .total-price { font-family: 'Trirong', serif; font-size: 36px; color: var(--brand-dark); font-weight: 600; }
+  .value-stack .intro { text-align: center; color: var(--ink-light); margin-bottom: 20px; font-size: 15px; }
+
+  /* 15 Tier Bundle */
+  .tier-intro { text-align: center; margin-bottom: 56px; }
+  .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
+  .tier-card { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-lg); padding: 40px 32px; position: relative; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+  .tier-card.featured { border: 2px solid var(--cta); transform: scale(1.03); box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15), var(--shadow-lg); }
+  .tier-card.featured .recommended { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--cta); color: #fff; padding: 6px 18px; border-radius: 100px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+  .tier-card .tier-name { font-family: 'Cormorant Garamond', serif; font-size: 14px; color: var(--ink-muted); margin-bottom: 8px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
+  .tier-card h3 { color: var(--ink); font-size: 26px; margin-bottom: 8px; }
+  .tier-card .tagline { font-size: 14px; color: var(--ink-muted); margin-bottom: 28px; min-height: 40px; }
+  .tier-card .price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .tier-card .price strong { font-family: 'Trirong', serif; font-size: 42px; color: var(--ink); font-weight: 600; }
+  .tier-card .price .old { color: var(--ink-muted); text-decoration: line-through; font-size: 17px; }
+  .tier-card .price-note { font-size: 13px; color: var(--ink-muted); margin-bottom: 28px; }
+  .tier-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
+  .tier-features li { font-size: 14px; color: var(--ink-light); display: flex; align-items: start; gap: 10px; line-height: 1.5; }
+  .tier-features li::before { content: '✓'; color: var(--brand); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .tier-features li.dim { color: var(--ink-faint); text-decoration: line-through; }
+  .tier-features li.dim::before { content: '—'; color: var(--ink-faint); }
+  .tier-card .btn { width: 100%; }
+
+  /* 16 Guarantee */
+  .guarantee { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-lg); padding: 56px; max-width: 820px; margin: 48px auto 0; text-align: center; box-shadow: var(--shadow-md); position: relative; }
+  .guarantee .seal { width: 96px; height: 96px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-family: 'Trirong', serif; font-size: 13px; line-height: 1.2; text-align: center; border: 3px solid var(--brand); font-weight: 600; }
+  .guarantee h2 { margin-bottom: 16px; }
+  .guarantee p { max-width: 620px; margin: 0 auto; }
+  .guarantee .signature { margin-top: 32px; font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--ink); }
+
+  /* 17 FAQ */
+  .faq-list { max-width: 760px; margin: 48px auto 0; }
+  .faq-item { background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; }
+  .faq-q { padding: 20px 24px; font-weight: 600; color: var(--ink); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; font-size: 16px; }
+  .faq-q::after { content: '+'; color: var(--brand); font-size: 22px; transition: transform 0.2s; }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-item.open { border-color: var(--brand); }
+  .faq-a { padding: 0 24px 20px; color: var(--ink-light); font-size: 15px; line-height: 1.7; display: none; }
+  .faq-item.open .faq-a { display: block; }
+
+  /* 18 Founder Letter */
+  .founder-letter { max-width: 720px; margin: 0 auto; background: #fff; border: 1px solid var(--sand-border); border-radius: var(--radius-lg); padding: 64px; position: relative; box-shadow: var(--shadow-md); }
+  .founder-letter::before { content: '"'; position: absolute; top: 24px; left: 32px; font-family: 'Cormorant Garamond', serif; font-size: 120px; color: var(--sand-300); line-height: 1; }
+  .founder-letter .greeting { font-family: 'Trirong', serif; font-size: 22px; margin-bottom: 24px; color: var(--ink); font-style: italic; }
+  .founder-letter p { font-size: 17px; line-height: 1.85; margin-bottom: 18px; color: var(--ink-light); }
+  .founder-letter .signature { margin-top: 32px; font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--ink); }
+  .founder-letter .title { font-size: 14px; color: var(--ink-muted); margin-top: 4px; }
+
+  /* 19 Final CTA */
+  .final-cta { background: linear-gradient(180deg, var(--sand-100) 0%, var(--sand-200) 100%); text-align: center; padding: 120px 0; }
+  .final-cta h2 { font-size: clamp(32px, 4vw, 52px); margin-bottom: 20px; color: var(--ink); }
+  .final-cta h2 em { font-style: normal; color: var(--brand); }
+  .final-cta p { max-width: 620px; margin: 0 auto 40px; font-size: 18px; color: var(--ink-light); }
+  .final-cta .btn-cta { padding: 22px 56px; font-size: 19px; }
+  .final-cta .note { margin-top: 24px; font-size: 13px; color: var(--ink-muted); }
+  .final-cta .deadline-chip { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #fff; border: 1px solid var(--sand-border); border-radius: 100px; color: var(--urgency); font-size: 13px; font-weight: 600; margin-bottom: 28px; }
+
+  /* Footer */
+  footer { background: #fff; border-top: 1px solid var(--sand-border); padding: 48px 0; text-align: center; color: var(--ink-muted); font-size: 13px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    section { padding: 72px 0; }
+    .hero { padding: 140px 0 80px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .case-grid { grid-template-columns: repeat(2, 1fr); }
+    .pain-grid { grid-template-columns: 1fr; }
+    .why-fail, .framework-steps, .benefits-grid, .testimonial-grid { grid-template-columns: 1fr; }
+    .featured-case { grid-template-columns: 1fr; padding: 32px; gap: 32px; }
+    .instructor { grid-template-columns: 1fr; padding: 32px; gap: 32px; }
+    .tier-grid { grid-template-columns: 1fr; }
+    .tier-card.featured { transform: none; }
+    .value-stack, .guarantee, .founder-letter { padding: 32px; }
+    .sticky-header .save-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sticky Price Header -->
+<div class="sticky-header">
+  <div class="container inner">
+    <div class="price-info">
+      <span class="mono" style="color: var(--ink-muted);">AI MASTERY</span>
+      <span class="old-price">฿4,990</span>
+      <span class="price">฿2,490</span>
+      <span class="save-badge">ประหยัด 50%</span>
+    </div>
+    <a href="#pricing" class="btn btn-cta">สมัครตอนนี้ →</a>
+  </div>
+</div>
+
+<!-- 01 Hero -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="pre-headline">★ เปิดรับรุ่นที่ 7 — เริ่ม 15 พ.ค. 2025</span>
+      <h1>เปลี่ยน AI ให้เป็น <em>ผู้ช่วยส่วนตัว</em><br/>ที่ทำงานแทนคุณได้จริง</h1>
+      <p class="sub">คอร์สเดียวที่สอนให้คุณใช้ ChatGPT, Claude และ AI tools ได้เต็มศักยภาพ จาก prompt งูๆ ปลาๆ สู่ workflow ที่ทุ่นเวลาได้ 10 ชม./สัปดาห์ — พิสูจน์แล้วโดยผู้เรียนกว่า 2,800 คน</p>
+      <div class="stats">
+        <div class="stat"><strong>2,847</strong><span>ผู้เรียนสำเร็จ</span></div>
+        <div class="stat"><strong>4.9/5</strong><span>คะแนนเฉลี่ย</span></div>
+        <div class="stat"><strong>94%</strong><span>ใช้งานต่อเนื่อง</span></div>
+      </div>
+      <div class="cta-group">
+        <a href="#pricing" class="btn btn-cta btn-lg">เริ่มเรียนวันนี้ →</a>
+        <a href="#cases" class="btn btn-ghost btn-lg">ดูผลลัพธ์ผู้เรียน</a>
+      </div>
+      <div class="guarantee-note">✓ รับประกันคืนเงิน 30 วัน &nbsp;·&nbsp; ✓ เรียนได้ตลอดชีวิต</div>
+    </div>
+    <div class="hero-image-card">
+      <div class="badge-float">LIVE</div>
+      <div class="dashboard-mock">[ Dashboard / Course Preview ]</div>
+      <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-muted);">
+        <span>42 บทเรียน · 18 ชม.</span>
+        <span>★★★★★ 4.9</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 Trust Strip -->
+<div class="trust-strip">
+  <div class="container">
+    <div class="label">ผู้เรียนจากองค์กรชั้นนำ</div>
+    <div class="trust-logos">
+      <span class="trust-logo">SCB</span>
+      <span class="trust-logo">KBank</span>
+      <span class="trust-logo">PTT</span>
+      <span class="trust-logo">AIS</span>
+      <span class="trust-logo">True</span>
+      <span class="trust-logo">CP Group</span>
+    </div>
+  </div>
+</div>
+
+<!-- 03 Case Strip -->
+<div class="case-strip" id="cases">
+  <div class="container">
+    <h2 class="serif">ผลลัพธ์จริง จากผู้เรียนรุ่นก่อน</h2>
+    <div class="case-grid">
+      <div class="case-mini">
+        <div class="avatar">NK</div>
+        <strong>+320%</strong>
+        <div class="metric">productivity</div>
+        <div class="name">คุณณัฐ K.<br/><span>Marketing Manager</span></div>
+      </div>
+      <div class="case-mini">
+        <div class="avatar">PT</div>
+        <strong>10 ชม.</strong>
+        <div class="metric">ประหยัด/สัปดาห์</div>
+        <div class="name">คุณปรีญา T.<br/><span>Founder</span></div>
+      </div>
+      <div class="case-mini">
+        <div class="avatar">SJ</div>
+        <strong>฿180K</strong>
+        <div class="metric">รายได้เสริม/เดือน</div>
+        <div class="name">คุณสมชาย J.<br/><span>Freelancer</span></div>
+      </div>
+      <div class="case-mini">
+        <div class="avatar">AK</div>
+        <strong>3 เดือน</strong>
+        <div class="metric">เปลี่ยนสายงาน</div>
+        <div class="name">คุณอรทัย K.<br/><span>AI Consultant</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 Pain Points -->
+<section>
+  <div class="container-sm">
+    <div class="section-label">ปัญหาที่คุณกำลังเจอ</div>
+    <h2 class="serif">คุณรู้สึกแบบนี้บ้างไหม?</h2>
+    <p class="lead">คนรอบตัวใช้ AI เก่งขึ้นเรื่อยๆ แต่คุณยังติดอยู่ที่ prompt เดิมๆ ได้ผลลัพธ์ที่ "พอใช้ได้" แต่ไม่เคยว้าว</p>
+  </div>
+  <div class="container">
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">⏱️</div>
+        <h3>เสียเวลาแก้ prompt ซ้ำๆ</h3>
+        <p>พิมพ์ถาม ChatGPT แล้วคำตอบไม่ตรงใจ ต้องแก้ไปแก้มา 10 รอบ สุดท้ายพิมพ์เองเร็วกว่า</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">📊</div>
+        <h3>ไม่รู้จะเริ่มที่ tool ไหน</h3>
+        <p>ChatGPT? Claude? Gemini? Perplexity? Notion AI? แต่ละตัวเก่งคนละอย่าง งง ไม่รู้จะเลือกยังไง</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔒</div>
+        <h3>กลัว AI ตอบผิด ใช้ไม่ได้จริง</h3>
+        <p>เคยโดน hallucinate จน presentation พังมาแล้ว ตอนนี้เลยไม่กล้าใช้กับงานสำคัญ</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🎯</div>
+        <h3>ใช้ AI แค่เรื่องง่ายๆ</h3>
+        <p>ได้แค่ให้ช่วยตอบอีเมล สรุป note รู้สึกว่ายังใช้ไม่เต็มศักยภาพจริงๆ</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 Why Fail -->
+<section class="alt">
+  <div class="container-sm">
+    <div class="section-label">เหตุผลที่คนส่วนใหญ่ล้มเหลว</div>
+    <h2 class="serif">ทำไม 87% ของคนที่ลองใช้ AI เอง ถึงเลิกไปเงียบๆ?</h2>
+  </div>
+  <div class="container">
+    <div class="why-fail">
+      <div class="why-card">
+        <div class="number">01</div>
+        <h3>เรียนจาก YouTube แบบสุ่มๆ</h3>
+        <p>ดูคลิป 100 คลิปแต่ไม่มีโครงสร้าง ทุกคลิปสอนสิ่งเดียวกัน เรียนมาเยอะแต่ทำงานจริงไม่ได้</p>
+      </div>
+      <div class="why-card">
+        <div class="number">02</div>
+        <h3>ไม่รู้ framework การเขียน prompt</h3>
+        <p>ใช้ความรู้สึกล้วนๆ พิมพ์สั้นๆ หวังให้ AI เดาใจ ผลคือได้ output ขยะ แล้วโทษว่า AI ไม่เก่ง</p>
+      </div>
+      <div class="why-card">
+        <div class="number">03</div>
+        <h3>ไม่ integrate เข้า workflow</h3>
+        <p>เปิด ChatGPT ทีนึงก็ปิดที ไม่เคยสร้างระบบที่ AI ช่วยงานอัตโนมัติ — เลยไม่เห็นผลลัพธ์ที่ compound</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 Framework -->
+<section>
+  <div class="container">
+    <div class="framework-hero">
+      <div class="section-label">วิธีของเรา</div>
+      <h2 class="serif">ระบบ B.R.I.E.F. — จาก prompt งูๆ ปลาๆ สู่ผู้ช่วย AI ระดับโปร</h2>
+      <p class="lead">framework ที่ใช้สอนคนกว่า 2,800 คน ให้ใช้ AI ได้อย่าง systematic ไม่ใช่แค่ "ลองผิดลองถูก"</p>
+    </div>
+    <div class="framework-steps">
+      <div class="framework-step">
+        <div class="step-num">B</div>
+        <h4>Baseline</h4>
+        <p>วัดความสามารถเดิม และเข้าใจจุดที่ต้องพัฒนา</p>
+      </div>
+      <div class="framework-step">
+        <div class="step-num">R</div>
+        <h4>Reframe</h4>
+        <p>เขียน prompt ใหม่ด้วยโครงสร้าง context + role + task</p>
+      </div>
+      <div class="framework-step">
+        <div class="step-num">I</div>
+        <h4>Iterate</h4>
+        <p>ปรับ output ด้วย chain-of-thought และ few-shot</p>
+      </div>
+      <div class="framework-step">
+        <div class="step-num">E.F.</div>
+        <h4>Embed &amp; Flow</h4>
+        <p>ติดตั้งเข้า workflow จริง ให้ AI ทำงานแทนแบบอัตโนมัติ</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 Featured Case 1 -->
+<section class="cream">
+  <div class="container">
+    <div class="section-label">กรณีศึกษา #1</div>
+    <div class="featured-case">
+      <div class="case-photo">[ Photo: Marketing Manager ]</div>
+      <div class="case-content">
+        <div class="case-label">Marketing · B2B SaaS</div>
+        <h3>"จาก overtime ทุกวัน สู่เลิกงานตรงเวลาได้จริง"</h3>
+        <blockquote class="case-quote">
+          ก่อนเรียน ผมทำ content calendar เองทั้งเดือน ใช้เวลา 3 วันเต็ม พอใช้ framework ของคอร์ส ตอนนี้เหลือ 4 ชั่วโมง และ quality ดีกว่าเดิม
+        </blockquote>
+        <div class="case-metrics">
+          <div class="m"><strong>3 วัน → 4 ชม.</strong><span>เวลาทำงาน</span></div>
+          <div class="m"><strong>+320%</strong><span>content output</span></div>
+          <div class="m"><strong>฿45K</strong><span>bonus ไตรมาส</span></div>
+        </div>
+        <p class="case-byline"><strong>คุณณัฐ K.</strong> — Marketing Manager, SaaS Startup</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 Benefits -->
+<section>
+  <div class="container-sm">
+    <div class="section-label">สิ่งที่คุณจะได้</div>
+    <h2 class="serif">จบคอร์สแล้วคุณจะทำอะไรได้บ้าง</h2>
+  </div>
+  <div class="container">
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="icon">⚡</div>
+        <h3>ทุ่นเวลา 10+ ชม./สัปดาห์</h3>
+        <p>automate งาน repetitive ด้วย AI workflow ที่สร้างเองได้ ไม่ต้องพึ่ง developer</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">💡</div>
+        <h3>เขียน prompt ระดับมืออาชีพ</h3>
+        <p>ได้ output ที่ใช้งานได้จริงตั้งแต่ครั้งแรก ไม่ต้องแก้ 10 รอบอีกต่อไป</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">🔧</div>
+        <h3>สร้าง AI assistant ของตัวเอง</h3>
+        <p>Custom GPT + Claude Project สำหรับงานเฉพาะทางของคุณโดยเฉพาะ</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">📈</div>
+        <h3>เพิ่มรายได้จาก skill ใหม่</h3>
+        <p>รับงาน freelance AI consulting หรือต่อรองเงินเดือนได้สูงขึ้น</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">🛡️</div>
+        <h3>ใช้ AI อย่างปลอดภัย</h3>
+        <p>รู้วิธีตรวจสอบ hallucination และปกป้องข้อมูลสำคัญของบริษัท</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">🚀</div>
+        <h3>ก้าวล้ำกว่าเพื่อนร่วมงาน</h3>
+        <p>เป็นคนที่ทีมปรึกษาเรื่อง AI — positioning ที่ทำให้คุณขาดไม่ได้</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 Curriculum -->
+<section class="alt">
+  <div class="container-sm">
+    <div class="section-label">เนื้อหาคอร์ส</div>
+    <h2 class="serif">42 บทเรียน · 18 ชั่วโมง · เรียนได้ตลอดชีวิต</h2>
+  </div>
+  <div class="container">
+    <div class="curriculum-list">
+      <div class="lesson">
+        <div class="num">01</div>
+        <div class="body">
+          <h4>AI Landscape — รู้จัก tool ทั้งหมดและเลือกให้ถูก</h4>
+          <p>ChatGPT vs Claude vs Gemini · เมื่อไหร่ใช้อะไร · การตั้งค่าเริ่มต้น</p>
+        </div>
+        <div class="meta">8 บท · 2.5 ชม.</div>
+      </div>
+      <div class="lesson">
+        <div class="num">02</div>
+        <div class="body">
+          <h4>Prompt Engineering Foundation</h4>
+          <p>โครงสร้าง prompt ที่ใช้ได้ทุกสถานการณ์ · CRAFT framework · เทคนิคขั้นสูง</p>
+        </div>
+        <div class="meta">12 บท · 4 ชม.</div>
+      </div>
+      <div class="lesson">
+        <div class="num">03</div>
+        <div class="body">
+          <h4>AI for Content Creation</h4>
+          <p>เขียนบทความ · ทำ social post · วาง content calendar · generate ภาพ</p>
+        </div>
+        <div class="meta">8 บท · 3.5 ชม.</div>
+      </div>
+      <div class="lesson">
+        <div class="num">04</div>
+        <div class="body">
+          <h4>AI for Business Analysis</h4>
+          <p>วิเคราะห์ข้อมูล · ทำ SWOT · เขียน business plan · สร้าง financial model</p>
+        </div>
+        <div class="meta">6 บท · 3 ชม.</div>
+      </div>
+      <div class="lesson">
+        <div class="num">05</div>
+        <div class="body">
+          <h4>Workflow Automation</h4>
+          <p>เชื่อม AI เข้า Zapier/Make · สร้าง Custom GPT · Claude Project</p>
+        </div>
+        <div class="meta">5 บท · 3 ชม.</div>
+      </div>
+      <div class="lesson">
+        <div class="num">06</div>
+        <div class="body">
+          <h4>Capstone Project</h4>
+          <p>สร้าง AI assistant ของตัวเองที่ใช้งานได้จริง · นำเสนอ · รับ feedback</p>
+        </div>
+        <div class="meta">3 บท · 2 ชม.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 Featured Case 2 -->
+<section>
+  <div class="container">
+    <div class="section-label">กรณีศึกษา #2</div>
+    <div class="featured-case">
+      <div class="case-photo">[ Photo: Freelance Consultant ]</div>
+      <div class="case-content">
+        <div class="case-label">Freelance · Consulting</div>
+        <h3>"เพิ่มรายได้ ฿180,000/เดือน ด้วย skill AI ที่เรียนจากคอร์ส"</h3>
+        <blockquote class="case-quote">
+          ผมเคยคิดว่า AI เป็นภัยต่ออาชีพผม วันนี้มันกลายเป็นแหล่งรายได้หลัก ลูกค้าเรียกผมว่า "AI Whisperer" และยอมจ่ายมากกว่าเดิม 3 เท่า
+        </blockquote>
+        <div class="case-metrics">
+          <div class="m"><strong>฿180K</strong><span>รายได้เสริม/เดือน</span></div>
+          <div class="m"><strong>3×</strong><span>rate เพิ่มขึ้น</span></div>
+          <div class="m"><strong>8 บริษัท</strong><span>ลูกค้าประจำ</span></div>
+        </div>
+        <p class="case-byline"><strong>คุณสมชาย J.</strong> — Freelance Business Consultant</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 Testimonial Wall -->
+<section class="alt">
+  <div class="container-sm">
+    <div class="section-label">เสียงจากผู้เรียน</div>
+    <h2 class="serif">ผู้เรียน 2,847 คน ให้คะแนน 4.9/5 ด้วยเหตุผลเดียวกัน</h2>
+  </div>
+  <div class="container">
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"ไม่เคยคิดว่าจะเขียน prompt ได้ขนาดนี้ อาจารย์สอนเป็นระบบมาก ดูครั้งเดียวก็เข้าใจ แถมมีตัวอย่างใช้งานจริงให้ลองตาม"</p>
+        <div class="author">
+          <div class="avatar">PM</div>
+          <div><strong>คุณพิมพ์ M.</strong><span>HR Director</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"คุ้มเกินราคามาก ผมเอา framework ไปใช้กับทีมได้ทันที Productivity ของทีมเพิ่มขึ้น 40% ภายใน 2 เดือน"</p>
+        <div class="author">
+          <div class="avatar">KC</div>
+          <div><strong>คุณกิตติ C.</strong><span>Tech Lead</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"ชอบมากที่มี community ให้ถามได้ ทุกครั้งที่ติด มีคนตอบภายใน 1 ชั่วโมง คอร์สนี้ไม่ใช่แค่วิดีโอ แต่เป็นระบบสนับสนุนเต็มรูปแบบ"</p>
+        <div class="author">
+          <div class="avatar">VJ</div>
+          <div><strong>คุณวิชัย J.</strong><span>Entrepreneur</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"เพิ่งเรียนจบ week 2 ก็เอาไปใช้งานจริงแล้วที่ออฟฟิศ หัวหน้าตั้งให้เป็น AI champion ของทีม ขอบคุณคอร์สนี้มากๆ"</p>
+        <div class="author">
+          <div class="avatar">NS</div>
+          <div><strong>คุณนพ S.</strong><span>Data Analyst</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"ตอนแรกลังเลเพราะเคยเรียนคอร์สฟรีมาเยอะแล้ว แต่คอร์สนี้ให้เนื้อหาลึกกว่ามาก และ framework ใช้งานได้จริง ไม่ใช่ทฤษฎีเปล่า"</p>
+        <div class="author">
+          <div class="avatar">AR</div>
+          <div><strong>คุณอรอนงค์ R.</strong><span>Small Business Owner</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"วางระบบ Custom GPT ให้ลูกค้าได้ใน 1 สัปดาห์ เอาเงินค่าคอร์สคืนแล้วในโปรเจกต์แรก Life-changing จริงๆ"</p>
+        <div class="author">
+          <div class="avatar">TS</div>
+          <div><strong>คุณธนา S.</strong><span>Freelance Developer</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 Instructor -->
+<section>
+  <div class="container">
+    <div class="section-label">ผู้สอน</div>
+    <div class="instructor">
+      <div class="photo">[ Instructor Photo ]</div>
+      <div>
+        <h2 class="serif">พนพัฒน์ (Panapat)</h2>
+        <div class="title">AI Solutions Architect · Ex-Google · 12 ปีในวงการ</div>
+        <p>ที่ปรึกษา AI ให้ Fortune 500 กว่า 20 บริษัท ทำ AI transformation projects มูลค่ารวมกว่า 100 ล้านบาท — เริ่มสอน AI เพราะเห็นคนไทยจำนวนมากยังใช้ AI ไม่เต็มที่ ทั้งที่เป็น skill ที่เปลี่ยนชีวิตได้</p>
+        <p style="margin-top: 16px;">ผลงานได้รับการตีพิมพ์ใน Bangkok Post, Forbes Thailand และเป็นวิทยากรหลักในงาน Thailand AI Summit 2024</p>
+        <div class="instructor-stats">
+          <div class="s"><strong>2,847+</strong><span>ลูกศิษย์</span></div>
+          <div class="s"><strong>12 ปี</strong><span>ประสบการณ์</span></div>
+          <div class="s"><strong>20+</strong><span>บริษัท Fortune 500</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 Comparison -->
+<section class="alt">
+  <div class="container-sm">
+    <div class="section-label">เทียบกับตัวเลือกอื่น</div>
+    <h2 class="serif">ทำไมผู้เรียนเลือก BrieflyLearn มากกว่าทางเลือกอื่น</h2>
+  </div>
+  <div class="container">
+    <div class="compare-table">
+      <table>
+        <thead>
+          <tr>
+            <th>สิ่งที่ได้รับ</th>
+            <th style="background: var(--brand-pale); color: var(--brand-dark);">BrieflyLearn</th>
+            <th>YouTube ฟรี</th>
+            <th>คอร์สต่างประเทศ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>เนื้อหา Thai-first เข้าใจง่าย</td>
+            <td class="us">✓</td>
+            <td class="them">บางส่วน</td>
+            <td class="them">✗</td>
+          </tr>
+          <tr>
+            <td>Framework เป็นระบบ</td>
+            <td class="us">✓ B.R.I.E.F.</td>
+            <td class="them">✗</td>
+            <td class="us">✓</td>
+          </tr>
+          <tr>
+            <td>ตัวอย่างใช้งานบริบทไทย</td>
+            <td class="us">✓</td>
+            <td class="them">✗</td>
+            <td class="them">✗</td>
+          </tr>
+          <tr>
+            <td>Community &amp; Q&amp;A</td>
+            <td class="us">✓ 24/7</td>
+            <td class="them">✗</td>
+            <td class="them">จำกัด</td>
+          </tr>
+          <tr>
+            <td>รับประกันคืนเงิน 30 วัน</td>
+            <td class="us">✓</td>
+            <td class="them">—</td>
+            <td class="them">✗</td>
+          </tr>
+          <tr>
+            <td>อัปเดตตามเทคโนโลยีใหม่</td>
+            <td class="us">✓ ตลอดชีพ</td>
+            <td class="them">หาเอง</td>
+            <td class="them">เสียเพิ่ม</td>
+          </tr>
+          <tr>
+            <td>ราคา</td>
+            <td class="us">฿2,490</td>
+            <td class="them">ฟรี (+เวลาเยอะ)</td>
+            <td class="them">฿15,000+</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 14 Value Stack -->
+<section>
+  <div class="container-sm">
+    <div class="section-label">มูลค่าที่คุณจะได้รับ</div>
+    <h2 class="serif">สิ่งที่อยู่ในคอร์ส — มูลค่ารวมกว่า ฿28,000</h2>
+  </div>
+  <div class="container">
+    <div class="value-stack">
+      <p class="intro">เมื่อสมัครวันนี้ คุณจะได้ทุกอย่างนี้</p>
+      <div class="value-item">
+        <div class="name"><strong>Core Course — 42 บทเรียน 18 ชั่วโมง</strong>เนื้อหาหลักทั้งหมด + อัปเดตตลอดชีพ</div>
+        <div class="price">฿12,000</div>
+      </div>
+      <div class="value-item">
+        <div class="name"><strong>Prompt Library 500+ ตัวอย่าง</strong>Copy-paste ไปใช้งานได้ทันที</div>
+        <div class="price">฿4,500</div>
+      </div>
+      <div class="value-item">
+        <div class="name"><strong>Private Community Access</strong>Q&amp;A ภายใน 24 ชม. · Monthly AMA กับผู้สอน</div>
+        <div class="price">฿3,500</div>
+      </div>
+      <div class="value-item">
+        <div class="name"><strong>Workflow Templates Pack</strong>15 templates พร้อมใช้สำหรับงาน marketing/sales/HR</div>
+        <div class="price">฿2,800</div>
+      </div>
+      <div class="value-item">
+        <div class="name"><strong>Capstone Project Review</strong>รับ feedback 1-on-1 กับผู้สอน 30 นาที</div>
+        <div class="price">฿3,500</div>
+      </div>
+      <div class="value-item">
+        <div class="name"><strong>🎁 Bonus: AI Tool Directory</strong>คู่มือเปรียบเทียบ 50+ AI tools สำหรับแต่ละกรณี</div>
+        <div class="price">฿1,700</div>
+      </div>
+      <div class="value-total">
+        <div class="label">มูลค่ารวมทั้งหมด</div>
+        <div class="total-price">฿28,000</div>
+      </div>
+      <div class="value-total" style="padding-top: 8px; border-top: 1px dashed var(--sand-border); margin-top: 8px;">
+        <div class="label" style="color: var(--cta); font-weight: 600;">ราคาจริงที่คุณจ่ายวันนี้</div>
+        <div class="total-price" style="color: var(--cta);">฿2,490</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 Tier Bundle -->
+<section class="alt" id="pricing">
+  <div class="container">
+    <div class="tier-intro">
+      <div class="section-label" style="justify-content: center;">แพ็คเกจ</div>
+      <h2 class="serif">เลือกแพ็คเกจที่เหมาะกับคุณ</h2>
+      <p class="lead" style="margin-top: 12px; max-width: 580px; margin-left: auto; margin-right: auto;">ทั้ง 3 แพ็คเกจรับประกันคืนเงิน 30 วันเต็มจำนวน — ไม่พอใจคืนเต็มไม่ถามคำถาม</p>
+    </div>
+
+    <div class="tier-grid">
+      <div class="tier-card">
+        <div class="tier-name">BASIC</div>
+        <h3>Self-Paced</h3>
+        <p class="tagline">สำหรับคนที่อยากเริ่มใช้ AI อย่างจริงจัง</p>
+        <div class="price">
+          <strong>฿2,490</strong>
+          <span class="old">฿4,990</span>
+        </div>
+        <div class="price-note">ชำระครั้งเดียว · เรียนได้ตลอดชีพ</div>
+        <ul class="tier-features">
+          <li>Core Course 42 บทเรียน 18 ชม.</li>
+          <li>Prompt Library 500+ ตัวอย่าง</li>
+          <li>AI Tool Directory</li>
+          <li class="dim">Private Community</li>
+          <li class="dim">Workflow Templates Pack</li>
+          <li class="dim">Capstone Project Review 1-on-1</li>
+        </ul>
+        <a href="#" class="btn btn-ghost">เลือกแพ็คเกจนี้</a>
+      </div>
+
+      <div class="tier-card featured">
+        <div class="recommended">★ แนะนำ</div>
+        <div class="tier-name">PREMIUM</div>
+        <h3>Core + Community</h3>
+        <p class="tagline">สำหรับคนที่อยากเรียนรู้เร็วกว่าและมีคนปรึกษา</p>
+        <div class="price">
+          <strong>฿3,990</strong>
+          <span class="old">฿7,990</span>
+        </div>
+        <div class="price-note">ชำระครั้งเดียว · เรียนได้ตลอดชีพ</div>
+        <ul class="tier-features">
+          <li>ทุกอย่างใน Basic</li>
+          <li>Private Community Access</li>
+          <li>Workflow Templates Pack (15 ชิ้น)</li>
+          <li>Monthly AMA กับผู้สอน</li>
+          <li>Priority Q&amp;A (ตอบภายใน 6 ชม.)</li>
+          <li class="dim">Capstone Project Review 1-on-1</li>
+        </ul>
+        <a href="#" class="btn btn-cta">เลือกแพ็คเกจนี้ →</a>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-name">VIP</div>
+        <h3>1-on-1 Mentorship</h3>
+        <p class="tagline">สำหรับคนที่อยาก implement เร็วที่สุดและมีคนโค้ชตัวต่อตัว</p>
+        <div class="price">
+          <strong>฿9,990</strong>
+          <span class="old">฿19,990</span>
+        </div>
+        <div class="price-note">ชำระครั้งเดียว · เรียนได้ตลอดชีพ</div>
+        <ul class="tier-features">
+          <li>ทุกอย่างใน Premium</li>
+          <li>Capstone Project Review 1-on-1 (90 นาที)</li>
+          <li>Weekly Coaching Call 4 ครั้ง</li>
+          <li>Custom GPT Setup สำหรับงานของคุณ</li>
+          <li>LINE ปรึกษาผู้สอนโดยตรง 30 วัน</li>
+          <li>Certificate of Completion</li>
+        </ul>
+        <a href="#" class="btn btn-primary">เลือกแพ็คเกจนี้</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 Guarantee -->
+<section>
+  <div class="container">
+    <div class="guarantee">
+      <div class="seal">30-DAY<br/>MONEY<br/>BACK</div>
+      <h2 class="serif">รับประกันคืนเงิน 30 วันเต็มจำนวน</h2>
+      <p>ถ้าภายใน 30 วันหลังสมัคร คุณรู้สึกว่าคอร์สไม่ตรงกับที่หวัง หรือไม่สามารถนำไปใช้ได้จริง — เขียนอีเมลมาหาผม ผมจะคืนเงินให้เต็มจำนวน ไม่ถามคำถาม ไม่มีเงื่อนไขแอบแฝง</p>
+      <p style="margin-top: 14px;">ผมมั่นใจในคุณภาพของคอร์สนี้มาก ถึงกล้ารับประกัน — เพราะผู้เรียน 2,847 คนก่อนหน้าคุณ มีคนขอคืนเงินแค่ 0.3% เท่านั้น</p>
+      <div class="signature">— พนพัฒน์, ผู้ก่อตั้ง BrieflyLearn</div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 FAQ -->
+<section class="alt">
+  <div class="container-sm">
+    <div class="section-label">คำถามที่พบบ่อย</div>
+    <h2 class="serif">คำถามที่ผู้เรียนมักสงสัยก่อนสมัคร</h2>
+  </div>
+  <div class="container">
+    <div class="faq-list">
+      <div class="faq-item open">
+        <div class="faq-q">ไม่มีพื้นฐาน AI เลย เรียนได้ไหม?<span></span></div>
+        <div class="faq-a">ได้ครับ คอร์สออกแบบให้เริ่มจาก 0 — บทแรกๆ จะสอนตั้งแต่การสมัคร, เปิดใช้งาน ChatGPT/Claude ไปจนถึงการใช้งานจริง ผู้เรียน 60% ของเราเริ่มจาก "ไม่เคยใช้" และจบคอร์สเป็นคนใช้ AI เก่งที่สุดในทีม</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">ใช้เวลาเรียนนานแค่ไหน?<span></span></div>
+        <div class="faq-a">คอร์ส 18 ชั่วโมง + โปรเจคประมาณ 10-15 ชั่วโมง ผู้เรียนส่วนใหญ่เรียนจบใน 4-6 สัปดาห์ โดยเรียนวันละ 30-60 นาที — แต่คุณเรียนได้ตามสะดวก ไม่มีกำหนดเวลาบีบ</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">คอร์สรวม ChatGPT Plus หรือ Claude Pro ให้ด้วยไหม?<span></span></div>
+        <div class="faq-a">ไม่รวมครับ แต่คอร์สจะแนะนำวิธีเลือก plan ที่เหมาะกับการใช้งานของคุณ โดยบทเรียนส่วนใหญ่ใช้ ChatGPT/Claude ฟรีก็เรียนได้ และบาง tool ที่แนะนำมีทางเลือกฟรีอยู่</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">ต่างจาก YouTube ฟรียังไง?<span></span></div>
+        <div class="faq-a">3 อย่างหลัก: (1) เนื้อหาเป็นระบบ — มี framework ชัดเจน ไม่ใช่ทิปกระจัดกระจาย (2) ตัวอย่างใช้งานจริงในบริบทไทย เช่น เขียนเมลลูกค้าไทย ทำ content สำหรับ market ไทย (3) มี community ถามได้ตลอด — ติดตรงไหนแก้ตรงนั้น</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">จ่ายแบบผ่อนได้ไหม?<span></span></div>
+        <div class="faq-a">ได้ครับ เรารับชำระผ่าน Pay Solutions ซึ่งรองรับการผ่อน 0% กับบัตรเครดิตของธนาคารหลักทุกแห่ง เลือกได้ 3, 6, หรือ 10 เดือน</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">ถ้าไม่ชอบ ขอเงินคืนยากไหม?<span></span></div>
+        <div class="faq-a">ไม่ยากเลยครับ — ส่งอีเมลมาที่ support@brieflylearn.com พร้อมเลขคำสั่งซื้อ เราคืนให้ภายใน 3-5 วันทำการ ไม่ถามคำถาม ไม่ต้องให้เหตุผล</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 Founder Letter -->
+<section>
+  <div class="container">
+    <div class="section-label" style="text-align: center; justify-content: center; display: flex; margin-bottom: 32px;">จดหมายจากผู้ก่อตั้ง</div>
+    <div class="founder-letter">
+      <div class="greeting">ถึงคุณ ผู้ที่กำลังอ่านหน้านี้,</div>
+      <p>ผมรู้ว่าคุณอาจจะเคยสมัครคอร์สออนไลน์แล้วไม่ได้เรียนจบมาก่อน ผมก็เคยเป็น — เคยจ่ายเงินหลักพันหลักหมื่นกับคอร์สที่สุดท้ายปล่อยให้ฝุ่นจับ</p>
+      <p>เหตุผลที่ผมสร้าง BrieflyLearn ขึ้นมาคือ ผมอยากให้คอร์สนี้แตกต่าง — ไม่ใช่แค่ "ดูวิดีโอเฉยๆ" แต่เป็นระบบที่พาคุณไปถึงผลลัพธ์จริง มี framework ชัดเจน มีคนให้ปรึกษา และมีเพื่อนร่วมทางที่เดินทางเดียวกัน</p>
+      <p>ผมไม่ได้สัญญาว่าคุณจะรวยในข้ามคืน หรือเปลี่ยนชีวิตได้ใน 30 วัน — แต่ผมสัญญาว่า ถ้าคุณตั้งใจเรียนและทำตาม framework คุณจะใช้ AI ได้แบบที่ไม่เคยเป็นมาก่อน และสิ่งนั้นจะเปลี่ยน trajectory ของอาชีพคุณในระยะยาว</p>
+      <p>ถ้าคุณพร้อม ผมรออยู่อีกฝั่งของหน้าสมัครครับ</p>
+      <div class="signature">พนพัฒน์</div>
+      <div class="title">ผู้ก่อตั้ง BrieflyLearn</div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 Final CTA -->
+<section class="final-cta">
+  <div class="container-sm">
+    <div class="deadline-chip">● เปิดรับรุ่นที่ 7 — ปิดรับ 14 พ.ค. 2025</div>
+    <h2 class="serif">พร้อมเปลี่ยน AI ให้เป็น<br/><em>แรงขับเคลื่อนใหม่</em> ของคุณหรือยัง?</h2>
+    <p>เข้าร่วมกับผู้เรียน 2,847 คน ที่ตัดสินใจลงทุนกับทักษะที่จะอยู่กับพวกเขาไปตลอดชีวิต — และให้ผลตอบแทนแบบ compound ทุกวัน</p>
+    <a href="#pricing" class="btn btn-cta btn-lg">เลือกแพ็คเกจและเริ่มเรียน →</a>
+    <div class="note">✓ รับประกันคืนเงิน 30 วัน &nbsp;·&nbsp; ✓ ชำระผ่านบัตรเครดิต/โอน/ผ่อน 0% &nbsp;·&nbsp; ✓ เริ่มเรียนทันทีหลังชำระ</div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    © 2025 BrieflyLearn · Mock Design for Review · All-Light Warm Minimalism Theme
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      q.parentElement.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>

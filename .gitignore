@@ -47,3 +47,10 @@ prisma/migrations/*.sql
 # OS
 .DS_Store
 Thumbs.db
+
+# Sensitive files - DO NOT COMMIT
+railway_environment_variables.env
+*.pid
+*.log
+database_backup.sql
+backup-script/

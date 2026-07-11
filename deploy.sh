@@ -137,9 +137,11 @@ if [ "\${TARGET}" = "all" ] || [ "\${TARGET}" = "backend" ]; then
     php artisan config:clear
     php artisan route:clear
     php artisan view:clear
+    php artisan filament:optimize-clear || true
     php artisan config:cache
     php artisan route:cache
     php artisan view:cache
+    php artisan filament:optimize || true
     log "Caches rebuilt"
 
     chown -R www-data:www-data "\${BACKEND_DIR}"
